@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
     //console.log(data);
 
-    var year = 1999;
+    var year = 2000;
 
     function getYears(yr) {
 
@@ -45,6 +45,11 @@ document.addEventListener("DOMContentLoaded", function(){
       return yearData;
     }
     yearData = getYears(year);
+
+    function showInfo(d,i) {
+    }
+    function hideInfo(d,i) {
+    }
 
     var yScale = d3.scaleLinear().domain([0,100]).range([height-100,40]);
     var yAxis = d3.axisLeft(yScale);
@@ -65,7 +70,9 @@ document.addEventListener("DOMContentLoaded", function(){
       .attr("fill","blue")
       .attr("fill-opacity",0.5)
       .attr("cx",function(d) { return xScale(d['Urbanization']*100); })
-      .attr("cy",function(d) { return yScale(d['CO2 Emission']*100); });
+      .attr("cy",function(d) { return yScale(d['CO2 Emission']*100); })
+      .on("mouseover", showInfo)
+      .on("mouseout", hideInfo);
 
     svg.append("g").call(xAxis).attr("transform", "translate(0,"+(height-100).toString()+")").style("stroke-width","1px").style('font-size','10px');
     svg.append("g").call(yAxis).attr("transform", "translate(100)").style("stroke-width","1px").style('font-size','10px');
