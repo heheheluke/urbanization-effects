@@ -19,8 +19,6 @@ document.addEventListener("DOMContentLoaded", function(){
     .attr("fill", "pink");
 */
 
-  var year = 1982;
-
   d3.csv("/data/test.csv", function(data) {
     data.forEach(function(d) {
       d["Urbanization"] = +d["Urbanization"];
@@ -34,13 +32,26 @@ document.addEventListener("DOMContentLoaded", function(){
     });
     //console.log(data);
 
+    var year = 1999;
+
+    function getYears(yr) {
+
+      var yearData = [];
+      data.forEach(function(d) {
+        if (d['Year'] == yr) {
+          yearData.push(d);
+        }
+      });
+      return yearData;
+    }
+    yearData = getYears(year);
+
     var yScale = d3.scaleLinear().domain([0,100]).range([height-100,40]);
     var yAxis = d3.axisLeft(yScale);
     var xScale = d3.scaleLinear().domain([0,100]).range([100,height-40]);
     var xAxis = d3.axisBottom(xScale);
 
-
-    var internetCircles = svg.append("g").selectAll("circle").data(data);
+    var internetCircles = svg.append("g").selectAll("circle").data(yearData);
     internetCircles = internetCircles.enter().append("circle")
       .attr("r",10)
       .attr("fill","red")
@@ -48,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function(){
       .attr("cx",function(d) { return xScale(d['Urbanization']*100); })
       .attr("cy",function(d) { return yScale(d['Internet']*100); });
 
-    var co2Circles = svg.append("g").selectAll("circle").data(data);
+    var co2Circles = svg.append("g").selectAll("circle").data(yearData);
     co2Circles = co2Circles.enter().append("circle")
       .attr("r",10)
       .attr("fill","blue")
