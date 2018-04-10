@@ -39,27 +39,23 @@ document.addEventListener("DOMContentLoaded", function(){
     var xScale = d3.scaleLinear().domain([0,100]).range([100,height-40]);
     var xAxis = d3.axisBottom(xScale);
 
-    var titles = d3.keys(data[0])
-      .filter(function(d) { return d !== "x"; })
-      .sort();
-    console.log(titles);
 
-    var internetCircles = svg.selectAll("circle").data(data);
+    var internetCircles = svg.append("g").selectAll("circle").data(data);
     internetCircles = internetCircles.enter().append("circle")
       .attr("r",10)
       .attr("fill","red")
       .attr("fill-opacity",0.5)
-      .attr("cy",function(d) { return yScale(d['Urbanization']*100); })
-      .attr("cx",function(d) { return xScale(d['Internet']*100); });
-/*
-    var co2Circles = svg.selectAll("circle").data(data);
+      .attr("cx",function(d) { return xScale(d['Urbanization']*100); })
+      .attr("cy",function(d) { return yScale(d['Internet']*100); });
+
+    var co2Circles = svg.append("g").selectAll("circle").data(data);
     co2Circles = co2Circles.enter().append("circle")
       .attr("r",10)
       .attr("fill","blue")
       .attr("fill-opacity",0.5)
-      .attr("cy",function(d) { return yScale(d['Urbanization']*100); })
-      .attr("cx",function(d) { return xScale(d['CO2 Emission']*100); });
-*/
+      .attr("cx",function(d) { return xScale(d['Urbanization']*100); })
+      .attr("cy",function(d) { return yScale(d['CO2 Emission']*100); });
+
     svg.append("g").call(xAxis).attr("transform", "translate(0,"+(height-100).toString()+")").style("stroke-width","1px").style('font-size','10px');
     svg.append("g").call(yAxis).attr("transform", "translate(100)").style("stroke-width","1px").style('font-size','10px');
 
