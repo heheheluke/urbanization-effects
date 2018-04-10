@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed');
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+
+}
+h1 {
+  text-align: center;
+}
+
+.scatterplot {
+  fill: blue:
+}
