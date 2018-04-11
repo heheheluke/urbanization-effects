@@ -12,21 +12,27 @@ document.addEventListener("DOMContentLoaded", function(){
               .attr("preserveAspectRatio", "xMinYMin meet")
               .style("border", "1px solid #cccccc")
 
-
-  d3.csv("data/test.csv", function(data) {
+// Country name,Country code,Year,Urbanization,CO2 emissions,Edu attainment (Bachelor),
+//Edu attainment (primary),Fertility rate,Govt exp (GDP),Govt exp (Exp),
+//Literacy rate,Enrollment ratio (primary),Enrollment ratio (tertiary),Internet usage
+  d3.csv("data/condensed_data.csv", function(data) {
     data.forEach(function(d) {
-      d["Urbanization"] = +d["Urbanization"];
-      d["CO2 Emission"] = +d["CO2 Emission"];
-      d["Edu Attainment"] = +d["Edu Attainment"];
-      d["Fert"] = +d["Fert"];
-      d["Gov Exp 1"] = +d["Gov Exp 1"];
-      d["Gov Exp 2"] = +d["Gov Exp 2"];
-      d["Internet"] = +d["Internet"];
       d["Year"] = +d["Year"];
+      d["Urbanization"] = +d["Urbanization"];
+      d["CO2 emissions"] = +d["CO2 emissions"];
+      d["Edu attainment (Bachelor)"] = +d["Edu attainment (Bachelor)"];
+      d["Edu attainment (primary)"] = +d["Edu attainment (primary)"];
+      d["Fertility rate"] = +d["Fertility rate"];
+      d["Govt exp (GDP)"] = +d["Govt exp (GDP)"];
+      d["Govt exp (Exp)"] = +d["Govt exp (Exp)"];
+      d["Literacy rate"] = +d["Literacy rate"];
+      d["Enrollment ratio (primary)"] = +d["Enrollment ratio (primary)"];
+      d["Enrollment ratio (tertiary)"] = +d["Enrollment ratio (tertiary)"];
+      d["Internet usage"] = +d["Internet usage"];
     });
-    console.log(data);
+    //console.log(data);
 
-    var year = 2000;
+    var year = 2012;
 
     function getYears(yr) {
 
@@ -58,25 +64,9 @@ document.addEventListener("DOMContentLoaded", function(){
     var xScale = d3.scaleLinear().domain([0,100]).range([xMinPix, xMaxPix]);
     var xAxis = d3.axisBottom(xScale);
 
-    // Create circles
-    var internetCircles = svg.append("g").selectAll("circle").data(yearData);
-    internetCircles = internetCircles.enter().append("circle")
-      .attr("r",10)
-      .attr("fill","red")
-      .attr("fill-opacity",0.5)
-      .attr("cx",function(d) { return xScale(d['Urbanization']*100); })
-      .attr("cy",function(d) { return yScale(d['Internet']*100); });
+    plotPoints(yearData);
 
-    var co2Circles = svg.append("g").selectAll("circle").data(yearData);
-    co2Circles = co2Circles.enter().append("circle")
-      .attr("r",10)
-      .attr("fill","blue")
-      .attr("fill-opacity",0.5)
-      .attr("cx",function(d) { return xScale(d['Urbanization']*100); })
-      .attr("cy",function(d) { return yScale(d['CO2 Emission']*100); })
-      .on("mouseover", showInfo)
-      .on("mouseout", hideInfo);
-
+    // Create axis
     svg.append("g").call(xAxis).attr("transform", "translate(0,"+(height-100).toString()+")").style("stroke-width","1px").style('font-size','10px');
     svg.append("g").call(yAxis).attr("transform", "translate(" + offset.left + ")").style("stroke-width","1px").style('font-size','10px');
 
@@ -92,8 +82,10 @@ document.addEventListener("DOMContentLoaded", function(){
     d3.selectAll(".slider").on("input", function() {
       var year = document.getElementById("timeSlider").value;
       updateTitle(year);
+      updatePoints(year);
     });
 
+    // Update scatterplot title
     function updateTitle(year) {
       svg.select(".graphTitle").remove();
       svg.append("text")
@@ -103,40 +95,129 @@ document.addEventListener("DOMContentLoaded", function(){
           .attr("class", "graphTitle")
           .text(year);
     }
-    // var x = d3.scaleLinear()
-    //     .domain([1970, 2013])
-    //     .range([0, graph.width])
-    //     .clamp(true);
-    //
-    // var slider = svg.append("g")
-    //     .attr("class", "slider")
-    //     .attr("transform", "translate(" + offset.left + "," + offset.top + ")");
-    //
-    // slider.append("line")
-    //   .attr("class", "track")
-    //   .attr("x1", x.range()[0]) // min val of range
-    //   .attr("x2", x.range()[1]) // max val of range
-    //   .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
-    //     .attr("class", "track-inset")
-    //   .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
-    //     .attr("class", "track-overlay")
-    //   .call(d3.drag()
-    //       .on("start drag", function() { console.log("hi"); }));
-    //
-    // slider.insert("g", ".track-overlay")
-    //       .attr("class", "ticks")
-    //       .attr("transform", "translate(0," + 18 + ")")
-    //       .selectAll("text")
-    //       .data(x.ticks(10))
-    //       .enter().append("text")
-    //       .attr("x", x)
-    //       .attr("text-anchor", "middle")
-    //       .text(function(d) { return d['Year']; });
-    //
-    // var handle = slider.insert("circle", ".track-overlay")
-    //     .attr("class", "handle")
-    //     .attr("r", 9);
 
+    // Update points on scatterplot;
+    function updatePoints(year) {
+      yearData = getYears(year);
+      svg.selectAll("circle").remove();
+      plotPoints(yearData);
+    }
+
+    // Plot all points (points for internet usage, CO2 emissions, etc) on scatterplot
+    function plotPoints(yearData) {
+      // internet usage
+      var internetCircles = svg.append("g").selectAll("circle").data(yearData);
+      internetCircles = internetCircles.enter().append("circle")
+        .attr("r",10)
+        .attr("fill","pink")
+        .attr("fill-opacity",0.5)
+        .attr("cx",function(d) { return xScale(d['Urbanization']); })
+        .attr("cy",function(d) { return yScale(d['Internet usage']); });
+      //co2 emissions
+      var co2Circles = svg.append("g").selectAll("circle").data(yearData);
+      co2Circles = co2Circles.enter().append("circle")
+        .attr("r",10)
+        .attr("fill","blue")
+        .attr("fill-opacity",0.5)
+        .attr("cx",function(d) { return xScale(d['Urbanization']); })
+        .attr("cy",function(d) { return yScale(d['CO2 emissions']); })
+        .on("mouseover", showInfo)
+        .on("mouseout", hideInfo);
+      // edu attainment (bachelor)
+      var edubachCircles = svg.append("g").selectAll("circle").data(yearData);
+      edubachCircles = edubachCircles.enter().append("circle")
+        .attr("r",10)
+        .attr("fill","red")
+        .attr("fill-opacity",0.5)
+        .attr("cx",function(d) { return xScale(d['Urbanization']); })
+        .attr("cy",function(d) { return yScale(d['Edu attainment (Bachelor)']); });
+      // edu attainment (primary)
+      var eduprimCircles = svg.append("g").selectAll("circle").data(yearData);
+      eduprimCircles = eduprimCircles.enter().append("circle")
+        .attr("r",10)
+        .attr("fill","orange")
+        .attr("fill-opacity",0.5)
+        .attr("cx",function(d) { return xScale(d['Urbanization']); })
+        .attr("cy",function(d) { return yScale(d['Edu attainment (primary)']); });
+      //fertility rate
+      var fertrateCircles = svg.append("g").selectAll("circle").data(yearData);
+      fertrateCircles = fertrateCircles.enter().append("circle")
+        .attr("r",10)
+        .attr("fill","grey")
+        .attr("fill-opacity",0.5)
+        .attr("cx",function(d) { return xScale(d['Urbanization']); })
+        .attr("cy",function(d) { return yScale(d['Fertility rate']); });
+      // gov exp (gdp)
+      var govgdpCircles = svg.append("g").selectAll("circle").data(yearData);
+      govgdpCircles = govgdpCircles.enter().append("circle")
+        .attr("r",10)
+        .attr("fill","turquoise")
+        .attr("fill-opacity",0.5)
+        .attr("cx",function(d) { return xScale(d['Urbanization']); })
+        .attr("cy",function(d) { return yScale(d['Govt exp (GDP)']); });
+      //govt exp (exp)
+      var govexpCircles = svg.append("g").selectAll("circle").data(yearData);
+      govexpCircles = govexpCircles.enter().append("circle")
+        .attr("r",10)
+        .attr("fill","red")
+        .attr("fill-opacity",0.5)
+        .attr("cx",function(d) { return xScale(d['Urbanization']); })
+        .attr("cy",function(d) { return yScale(d['Govt exp (Exp)']); });
+      //literacy rate
+      var litrateCircles = svg.append("g").selectAll("circle").data(yearData);
+      litrateCircles = litrateCircles.enter().append("circle")
+        .attr("r",10)
+        .attr("fill","green")
+        .attr("fill-opacity",0.5)
+        .attr("cx",function(d) { return xScale(d['Urbanization']); })
+        .attr("cy",function(d) { return yScale(d['Literacy rate']); });
+    }
+
+    // Create key
+    var keySects = [ {title: "CO2 Emissions (% per capita)", color: "blue"},
+                     {title: "Educational Attainment (Primary, % of Population)", color: "orange"},
+                     {title: "Educational Attainment (Bachelor, % of Population)", color: "red"},
+                     {title: "Fertility Rate (% of Population)", color: "grey"},
+                     {title: "Govt Expenditures (% of GDP)", color: "turquoise"} ,
+                     {title: "Govt Expenditures (% of Total Govt Expenditures)", color: "red"} ,
+                     {title: "Literacy Rate (% of Population)", color: "green"},
+                     {title: "Internet Usage (% of Population)", color: "pink"}
+                   ];
+    createKey();
+    function createKey() {
+      // Constants
+      var xPadding = 20,
+          yPosition = 0,
+          keyFontSize = 20;
+
+      var keyContainer = d3.select(".keyContainer");
+      keyContainer.append("div")
+          .attr("x", (graph.width / 2) + offset.left)
+          .attr("y", margin.top)
+          .attr("text-anchor", "middle")
+          .attr("class", "keyTitle")
+          .attr("font-size", "32px")
+          .text("Key:");
+          
+      var keyLabels = keyContainer.selectAll('text').data(keySects)
+                                  .enter().append("div") // Makes labels stack on top each other
+                                  .append("text")
+                                  .attr("class", "keySect");
+
+      keyLabels.attr("x", xPadding)
+                .attr("y", function(d) {
+                  yPosition += 10;
+                  return yPosition;
+                })
+                .attr("text-anchor", "start")
+                .attr("alignment-baseline", "hanging")
+                .style("font-size", keyFontSize)
+                .style("color", d => d.color)
+                .style("opacity", 0.5)
+                .text(d => d.title);
+
+
+    }
 
 
 }); // End callback data func

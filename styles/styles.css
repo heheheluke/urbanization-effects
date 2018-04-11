@@ -21,8 +21,10 @@ h1 {
   font-weight: 600;
 }
 
-.sliderContainer {
+.keyTitle {
+  font-weight: 600;
 }
+
 /* Slider */
 .ticks {
   font: 10px sans-serif;
