@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700,900|Roboto+Condensed');
 
 body {
   font-family: 'Roboto', sans-serif;
@@ -7,11 +7,54 @@ body {
   padding: 0;
 }
 
+.container {
+  text-align: center;
+}
+
 h1 {
   font-size: 2em;
   margin: 20 0 20 0; /*Top Left Bottom Right*/
 }
 
-.container {
-  text-align: center;
+.graphTitle {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.sliderContainer {
+}
+/* Slider */
+.ticks {
+  font: 10px sans-serif;
+}
+
+.track,
+.track-inset,
+.track-overlay {
+  stroke-linecap: round;
+}
+
+.track {
+  stroke: #000;
+  stroke-opacity: 0.3;
+  stroke-width: 10px;
+}
+
+.track-inset {
+  stroke: #ddd;
+  stroke-width: 8px;
+}
+
+.track-overlay {
+  pointer-events: stroke;
+  stroke-width: 50px;
+  stroke: transparent;
+  cursor: crosshair;
+}
+
+.handle {
+  fill: #fff;
+  stroke: #000;
+  stroke-opacity: 0.5;
+  stroke-width: 1.25px;
 }
