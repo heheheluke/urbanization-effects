@@ -3,12 +3,15 @@
 body {
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
-
+  margin: 0;
+  padding: 0;
 }
+
 h1 {
-  text-align: center;
+  font-size: 2em;
+  margin: 20 0 20 0; /*Top Left Bottom Right*/
 }
 
-.scatterplot {
-  fill: blue:
+.container {
+  text-align: center;
 }
