@@ -15,21 +15,27 @@ document.addEventListener("DOMContentLoaded", function(){
               .attr("preserveAspectRatio", "xMinYMin meet")
               .style("border", "1px solid #cccccc")
 
-
-  d3.csv("data/test.csv", function(data) {
+// Country name,Country code,Year,Urbanization,CO2 emissions,Edu attainment (Bachelor),
+//Edu attainment (primary),Fertility rate,Govt exp (GDP),Govt exp (Exp),
+//Literacy rate,Enrollment ratio (primary),Enrollment ratio (tertiary),Internet usage
+  d3.csv("data/condensed_data.csv", function(data) {
     data.forEach(function(d) {
-      d["Urbanization"] = +d["Urbanization"];
-      d["CO2 Emission"] = +d["CO2 Emission"];
-      d["Edu Attainment"] = +d["Edu Attainment"];
-      d["Fert"] = +d["Fert"];
-      d["Gov Exp 1"] = +d["Gov Exp 1"];
-      d["Gov Exp 2"] = +d["Gov Exp 2"];
-      d["Internet"] = +d["Internet"];
       d["Year"] = +d["Year"];
+      d["Urbanization"] = +d["Urbanization"];
+      d["CO2 emissions"] = +d["CO2 emissions"];
+      d["Edu attainment (Bachelor)"] = +d["Edu attainment (Bachelor)"];
+      d["Edu attainment (primary)"] = +d["Edu attainment (primary)"];
+      d["Fertility rate"] = +d["Fertility rate"];
+      d["Govt exp (GDP)"] = +d["Govt exp (GDP)"];
+      d["Govt exp (Exp)"] = +d["Govt exp (Exp)"];
+      d["Literacy rate"] = +d["Literacy rate"];
+      d["Enrollment ratio (primary)"] = +d["Enrollment ratio (primary)"];
+      d["Enrollment ratio (tertiary)"] = +d["Enrollment ratio (tertiary)"];
+      d["Internet usage"] = +d["Internet usage"];
     });
-    console.log(data);
+    //console.log(data);
 
-    var year = 2000;
+    var year = 2012;
 
     function getYears(yr) {
 
@@ -42,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function(){
       return yearData;
     }
     yearData = getYears(year);
+    console.log(yearData);
 
     function showInfo(d,i) {
     }
@@ -58,16 +65,16 @@ document.addEventListener("DOMContentLoaded", function(){
       .attr("r",10)
       .attr("fill","red")
       .attr("fill-opacity",0.5)
-      .attr("cx",function(d) { return xScale(d['Urbanization']*100); })
-      .attr("cy",function(d) { return yScale(d['Internet']*100); });
+      .attr("cx",function(d) { return xScale(d['Urbanization']); })
+      .attr("cy",function(d) { return yScale(d['Internet usage']); });
 
     var co2Circles = svg.append("g").selectAll("circle").data(yearData);
     co2Circles = co2Circles.enter().append("circle")
       .attr("r",10)
       .attr("fill","blue")
       .attr("fill-opacity",0.5)
-      .attr("cx",function(d) { return xScale(d['Urbanization']*100); })
-      .attr("cy",function(d) { return yScale(d['CO2 Emission']*100); })
+      .attr("cx",function(d) { return xScale(d['Urbanization']); })
+      .attr("cy",function(d) { return yScale(d['CO2 emissions']); })
       .on("mouseover", showInfo)
       .on("mouseout", hideInfo);
 
