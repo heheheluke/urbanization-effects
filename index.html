@@ -10,15 +10,20 @@
 <body>
   <section class="container">
     <h1>The Effects of Urbanization</h1>
-    <svg class="scatterplot">
-    </svg>
-    <div class="sliderContainer">
-      <input type="range" min="1970" max="2013" value="2000" tickInterval="10" class="slider" id="timeSlider">
+    <div class="clearfix">
+      <div class="column plots-container">
+        <svg class="scatterplot">
+        </svg>
+      </div>
+      <div class="column key-container">
+      </div>
     </div>
-    <div class="keyContainer">
-      
+    <div class="indiv-scatter-container">
     </div>
 
+    <div class="slider-container">
+      <input type="range" min="1970" max="2013" value="2000" tickInterval="10" class="slider" id="timeSlider">
+    </div>
   </section>
 
 </body>

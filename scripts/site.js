@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function(){
   // Set constants
   var width = 1000;
   var height = 750;
-  var margin = {top: 30, bottom: 20, left: 20, right: 20};
+  var margin = {top: 30, bottom: 50, left: 20, right: 20};
 
 
   var svg = d3.select(".scatterplot")
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function(){
     var xMaxPix = width - 40;
     var xMinPix = 100;
     var graph = { width: (xMaxPix - xMinPix), height: (yMaxPix - yMinPix)}
-    var offset = { left: 100, top: (height-100) }
+    var offset = { left: 100, top: (height-100) , bottom: 55}
 
     function yScale(data) {
       if (data != '') {
@@ -72,16 +72,35 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     var yScaleTemp = d3.scaleLinear().domain([0,100]).range([yMaxPix, yMinPix]);
-    var yAxis = d3.axisLeft(yScaleTemp);
+    var yAxis = d3.axisLeft(yScaleTemp).tickFormat(d => d + "%");
     var xScale = d3.scaleLinear().domain([0,100]).range([xMinPix, xMaxPix]);
-    var xAxis = d3.axisBottom(xScale);
+    var xAxis = d3.axisBottom(xScale).tickFormat(d => d + "%");
     var circleRadius = 5;
 
     plotPoints(yearData);
 
     // Create axis
-    svg.append("g").call(xAxis).attr("transform", "translate(0,"+(height-100).toString()+")").style("stroke-width","1px").style('font-size','10px');
-    svg.append("g").call(yAxis).attr("transform", "translate(" + offset.left + ")").style("stroke-width","1px").style('font-size','10px');
+    var formatPercent = d3.format(".0%");
+
+    svg.append("g").call(xAxis).attr("transform", "translate(0,"+(height-100).toString()+")").attr("class", "axis");
+    svg.append("g").call(yAxis).attr("transform", "translate(" + offset.left + ")").attr("class", "axis");
+
+    // Create axis labels
+    svg.append("text")
+        .attr("class", "x label")
+        .attr("text-anchor", "middle")
+        .attr("x", (graph.width / 2) + offset.left)
+        .attr("y", height - offset.bottom)
+        .text("Percentage of Urbanization (% of population)");
+
+    svg.append("text")
+        .attr("class", "y label")
+        .attr("text-anchor", "end")
+        .attr("y", 0.5*offset.left)
+        .attr("x", -0.35*graph.width)
+        .attr("dy", "1em")
+        .attr("transform", "rotate(-90)")
+        .text("Percentage");
 
     // Create graph title
     svg.append("text")
@@ -212,7 +231,7 @@ document.addEventListener("DOMContentLoaded", function(){
           yPosition = 0,
           keyFontSize = 20;
 
-      var keyContainer = d3.select(".keyContainer");
+      var keyContainer = d3.select(".key-container");
       keyContainer.append("div")
           .attr("x", (graph.width / 2) + offset.left)
           .attr("y", margin.top)
@@ -220,7 +239,7 @@ document.addEventListener("DOMContentLoaded", function(){
           .attr("class", "keyTitle")
           .attr("font-size", "32px")
           .text("Key:");
-          
+
       var keyLabels = keyContainer.selectAll('text').data(keySects)
                                   .enter().append("div") // Makes labels stack on top each other
                                   .append("text")
@@ -274,16 +293,16 @@ document.addEventListener("DOMContentLoaded", function(){
     //Function that creates a scatter plot of the chosen data indicator
     //Note: creates a new SVG element for each scatter plot.
     function createScatter(indicator) {
-      
-      //Make the initial SVG, all with class ".indiv-scatter" (for updating with time) and id "(indicator)-scatter" 
-      var scatterSVG = d3.select("body").append("svg")
+
+      //Make the initial SVG, all with class ".indiv-scatter" (for updating with time) and id "(indicator)-scatter"
+      var scatterSVG = d3.select(".indiv-scatter-container").append("svg")
         .attr("class", "indiv-scatter")
         .attr("id", indicator + "-scatter")
         .attr("width", indivSVGwidth)
         .attr("height", indivSVGheight)
         .style("border", "1px solid #000000")
         .style("background-color", '#D3D3D3');
-      
+
       //Draw the points
       var points = scatterSVG.append("g").selectAll("circle").data(yearData);
       points.enter().append("circle")

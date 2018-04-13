@@ -13,7 +13,7 @@ body {
 
 h1 {
   font-size: 2em;
-  margin: 20 0 20 0; /*Top Left Bottom Right*/
+  margin: 10 0 10 0; /*Top Left Bottom Right*/
 }
 
 .graphTitle {
@@ -25,7 +25,60 @@ h1 {
   font-weight: 600;
 }
 
-/* Slider */
+.key-container {
+  width: 20%;
+}
+
+.slider-container {
+  background-color:#262626;
+  width:100%;
+  box-shadow: 0px 1px 50px #5E5E5E;
+  position:fixed;
+  bottom:0px;
+  z-index: 10;
+}
+
+/* ---------------------------- Positioning Main ScatterPlot ----------------------------  */
+.plots-container {
+  width: 70%;
+}
+
+.column {
+  float: right;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+/* ---------------------------- Axis ----------------------------  */
+.axis {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 10px;
+}
+
+.axis text {
+  fill: rgb(150,150,150);
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: rgb(150,150,150);
+  shape-rendering: crispEdges;
+  stroke-width: 1px;
+}
+
+.label {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  fill: rgb(150,150,150);
+}
+
+/* ---------------------------- Slider ----------------------------  */
 .ticks {
   font: 10px sans-serif;
 }
