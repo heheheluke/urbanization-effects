@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function(){
   // Set constants
-  var width = 1300;
-  var height = 500;
+  var width = 1000;
+  var height = 750;
   var margin = {top: 30, bottom: 20, left: 20, right: 20};
 
 
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function(){
               .attr("height", height)
               .attr("viewBox","0 0 " + " " + width + " " + height)
               .attr("preserveAspectRatio", "xMinYMin meet")
-              .style("border", "1px solid #cccccc")
+              .style("border", "1px solid #ffffff")
 
 // Country name,Country code,Year,Urbanization,CO2 emissions,Edu attainment (Bachelor),
 //Edu attainment (primary),Fertility rate,Govt exp (GDP),Govt exp (Exp),
@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", function(){
       });
       return yearData;
     }
+
     yearData = getYears(year);
 
     function showInfo(d,i) {
@@ -54,15 +55,27 @@ document.addEventListener("DOMContentLoaded", function(){
     // Create scales
     var yMaxPix = height - 100;
     var yMinPix = 40;
-    var xMaxPix = height - 40;
+    var xMaxPix = width - 40;
     var xMinPix = 100;
     var graph = { width: (xMaxPix - xMinPix), height: (yMaxPix - yMinPix)}
     var offset = { left: 100, top: (height-100) }
 
-    var yScale = d3.scaleLinear().domain([0,100]).range([yMaxPix, yMinPix]);
-    var yAxis = d3.axisLeft(yScale);
+    function yScale(data) {
+      if (data != '') {
+        var actualYScale = d3.scaleLinear().domain([0,100]).range([yMaxPix, yMinPix]);
+        return actualYScale(data);
+      }
+
+      else {
+        return -999999;
+      }
+    }
+
+    var yScaleTemp = d3.scaleLinear().domain([0,100]).range([yMaxPix, yMinPix]);
+    var yAxis = d3.axisLeft(yScaleTemp);
     var xScale = d3.scaleLinear().domain([0,100]).range([xMinPix, xMaxPix]);
     var xAxis = d3.axisBottom(xScale);
+    var circleRadius = 5;
 
     plotPoints(yearData);
 
@@ -101,6 +114,15 @@ document.addEventListener("DOMContentLoaded", function(){
       yearData = getYears(year);
       svg.selectAll("circle").remove();
       plotPoints(yearData);
+
+      //Redraw the individual scatters
+      d3.selectAll(".indiv-scatter").remove();
+      createScatter("Literacy rate");
+      createScatter("Govt exp (Exp)");
+      createScatter("Edu attainment (primary)");
+      createScatter("Edu attainment (Bachelor)");
+      createScatter("Internet usage");
+
     }
 
     // Plot all points (points for internet usage, CO2 emissions, etc) on scatterplot
@@ -108,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function(){
       // internet usage
       var internetCircles = svg.append("g").selectAll("circle").data(yearData);
       internetCircles = internetCircles.enter().append("circle")
-        .attr("r",10)
+        .attr("r",circleRadius)
         .attr("fill","pink")
         .attr("fill-opacity",0.5)
         .attr("cx",function(d) { return xScale(d['Urbanization']); })
@@ -116,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function(){
       //co2 emissions
       var co2Circles = svg.append("g").selectAll("circle").data(yearData);
       co2Circles = co2Circles.enter().append("circle")
-        .attr("r",10)
+        .attr("r",circleRadius)
         .attr("fill","blue")
         .attr("fill-opacity",0.5)
         .attr("cx",function(d) { return xScale(d['Urbanization']); })
@@ -126,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function(){
       // edu attainment (bachelor)
       var edubachCircles = svg.append("g").selectAll("circle").data(yearData);
       edubachCircles = edubachCircles.enter().append("circle")
-        .attr("r",10)
+        .attr("r",circleRadius)
         .attr("fill","red")
         .attr("fill-opacity",0.5)
         .attr("cx",function(d) { return xScale(d['Urbanization']); })
@@ -134,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function(){
       // edu attainment (primary)
       var eduprimCircles = svg.append("g").selectAll("circle").data(yearData);
       eduprimCircles = eduprimCircles.enter().append("circle")
-        .attr("r",10)
+        .attr("r",circleRadius)
         .attr("fill","orange")
         .attr("fill-opacity",0.5)
         .attr("cx",function(d) { return xScale(d['Urbanization']); })
@@ -142,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function(){
       //fertility rate
       var fertrateCircles = svg.append("g").selectAll("circle").data(yearData);
       fertrateCircles = fertrateCircles.enter().append("circle")
-        .attr("r",10)
+        .attr("r",circleRadius)
         .attr("fill","grey")
         .attr("fill-opacity",0.5)
         .attr("cx",function(d) { return xScale(d['Urbanization']); })
@@ -150,7 +172,7 @@ document.addEventListener("DOMContentLoaded", function(){
       // gov exp (gdp)
       var govgdpCircles = svg.append("g").selectAll("circle").data(yearData);
       govgdpCircles = govgdpCircles.enter().append("circle")
-        .attr("r",10)
+        .attr("r",circleRadius)
         .attr("fill","turquoise")
         .attr("fill-opacity",0.5)
         .attr("cx",function(d) { return xScale(d['Urbanization']); })
@@ -158,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function(){
       //govt exp (exp)
       var govexpCircles = svg.append("g").selectAll("circle").data(yearData);
       govexpCircles = govexpCircles.enter().append("circle")
-        .attr("r",10)
+        .attr("r",circleRadius)
         .attr("fill","red")
         .attr("fill-opacity",0.5)
         .attr("cx",function(d) { return xScale(d['Urbanization']); })
@@ -166,7 +188,7 @@ document.addEventListener("DOMContentLoaded", function(){
       //literacy rate
       var litrateCircles = svg.append("g").selectAll("circle").data(yearData);
       litrateCircles = litrateCircles.enter().append("circle")
-        .attr("r",10)
+        .attr("r",circleRadius)
         .attr("fill","green")
         .attr("fill-opacity",0.5)
         .attr("cx",function(d) { return xScale(d['Urbanization']); })
@@ -218,6 +240,72 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
     }
+//-------------------------------------CREATING THE INDIVIDUAL SCATTER PLOTS----------------------------------------------
+    function indicToColor(ind) {
+      var temp = {"Internet usage": "pink",
+                  "Edu attainment (Bachelor)": "red",
+                  "Edu attainment (primary)": "orange",
+                  "Govt exp (Exp)": "red",
+                  "Literacy rate": "green"
+      };
+      return temp[ind];
+    }
+
+    indivSVGwidth = 600;
+    indivSVGheight = 600;
+    heightPadding = 0.1*indivSVGheight
+    widthPadding = 0.1*indivSVGwidth
+    indivSVGrad = 3.5;
+
+    var scatterScaleX = d3.scaleLinear().domain([0, 100]).range([widthPadding, indivSVGwidth-widthPadding])
+    var XAxesScale = d3.scaleLinear().domain([0, 100]).range([indivSVGwidth-widthPadding, widthPadding])
+    var tempScaleY = d3.scaleLinear().domain([0, 100]).range([heightPadding, indivSVGheight-heightPadding])
+    var yAxisScale = d3.scaleLinear().domain([0, 100]).range([indivSVGheight-heightPadding, heightPadding]) //Only used to create left-hand axis
+
+    function realYScale(val) {
+      if (val != '') {
+        return tempScaleY(val);
+      }
+      else {
+        return -999999999;
+      }
+    }
+
+    //Function that creates a scatter plot of the chosen data indicator
+    //Note: creates a new SVG element for each scatter plot.
+    function createScatter(indicator) {
+      
+      //Make the initial SVG, all with class ".indiv-scatter" (for updating with time) and id "(indicator)-scatter" 
+      var scatterSVG = d3.select("body").append("svg")
+        .attr("class", "indiv-scatter")
+        .attr("id", indicator + "-scatter")
+        .attr("width", indivSVGwidth)
+        .attr("height", indivSVGheight)
+        .style("border", "1px solid #000000")
+        .style("background-color", '#D3D3D3');
+      
+      //Draw the points
+      var points = scatterSVG.append("g").selectAll("circle").data(yearData);
+      points.enter().append("circle")
+        .attr("cx", function(d) { return scatterScaleX(d['Urbanization']); })
+        .attr("cy", function(d) { return indivSVGheight - realYScale(d[indicator]); })
+        .attr("r", indivSVGrad)
+        .attr("fill", function() { return indicToColor(indicator); }) //Placeholder
+        .attr("fill-opacity", 0.75)
+
+      //Create the axes and title
+      var scatterXAxis = d3.axisBottom().scale(scatterScaleX);
+      var scatterYAxis = d3.axisLeft().scale(yAxisScale);
+      scatterSVG.append("g").call(scatterXAxis).attr("transform", "translate(" + 0 +  "," + (indivSVGheight - heightPadding) + ")");
+      scatterSVG.append("g").call(scatterYAxis).attr("transform", "translate(" + (widthPadding) + ")");
+      scatterSVG.append("text").text(indicator).attr("x", 0.44*indivSVGwidth).attr("y", 0.05*indivSVGheight).attr("font-size", "20px")
+    }
+
+    createScatter("Literacy rate");
+    createScatter("Govt exp (Exp)");
+    createScatter("Edu attainment (primary)");
+    createScatter("Edu attainment (Bachelor)");
+    createScatter("Internet usage");
 
 
 }); // End callback data func
