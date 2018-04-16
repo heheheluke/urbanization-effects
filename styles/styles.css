@@ -121,6 +121,13 @@ h1 {
   fill: rgb(150,150,150);
 }
 
+.indiv-label {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  fill: rgb(150,150,150);
+}
+
 /* ---------------------------- Slider ----------------------------  */
 /* Code inspired from: https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/*/
 .slider-container {

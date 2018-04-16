@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function(){
       d["Internet usage"] = +d["Internet usage"];
     });
 
-    var year = 2012;
+    var year = 2013;
     var graphDict = {"Internet usage": {title: "Internet Usage", unit: "% of Population", className: "internet-usage-scatter", color: "pink"},
                 "Edu attainment (primary)": {title: "Educational Attainment (Primary)", unit: "% of Population", className: "edu-attainment-prim-scatter",color: "orange"},
                 "Govt exp (Exp)": {title: "Government Expenditures", unit: "% of Total Govt Expenditures", className: "govt-exp-scatter", color: "red"},
@@ -286,7 +286,7 @@ document.addEventListener("DOMContentLoaded", function(){
     var indivSVGwidth = 300;
     var indivSVGheight = 300;
     var heightPadding = 0.17*indivSVGheight;
-    var widthPadding = 0.13*indivSVGwidth;
+    var widthPadding = 0.18*indivSVGwidth;
     var indivSVGrad = 3.5;
 
     var xPosTitle = 0.5*indivSVGwidth;
@@ -345,6 +345,30 @@ document.addEventListener("DOMContentLoaded", function(){
                 .attr("y", yPosSubTitle)
                 .attr("text-anchor", "middle")
                 .attr("class", "individSVGSubtitle");
+      
+      //Dictionary for converting the raw indicator name to something that fits the labels of the axes more appropriately
+      var labelMap = {"Literacy rate": "Literacy rate", "Govt exp (Exp)": "% of expenditure", 
+      "Edu attainment (primary)": "Completed primary", "Internet usage": "Internet usage"};
+      //Create axes labels
+      scatterSVG.append("text")
+      .attr("class", "indiv-label")
+      .attr("text-anchor", "end")
+      .attr("y", 0.5*indivSVGheight)
+      .attr("x", -0.35*indivSVGwidth)
+      .attr("dy", "1em")
+      .attr("transform", "rotate(-90) translate(0, " + -0.49*indivSVGwidth + ")")
+      .attr("font-size", 8)
+      .text(labelMap[indicator]);
+
+      scatterSVG.append("text")
+      .attr("class", "indiv-label")
+      .attr("text-anchor", "end")
+      .attr("y", 0.92*indivSVGheight)
+      .attr("x", 0.67*indivSVGwidth)
+      .attr("dy", "1em")
+      .attr("font-size", 8)
+      .text("Urbanization (%)");
+
     }
 
     // Make individual scatterplots
