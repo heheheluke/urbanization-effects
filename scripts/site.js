@@ -32,10 +32,10 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
     var year = 2013;
-    var graphDict = {"Internet usage": {title: "Internet Usage", unit: "% of Population", className: "internet-usage-scatter", color: "pink"},
-                "Edu attainment (primary)": {title: "Educational Attainment (Primary)", unit: "% of Population", className: "edu-attainment-prim-scatter",color: "orange"},
-                "Govt exp (Exp)": {title: "Government Expenditures", unit: "% of Total Govt Expenditures", className: "govt-exp-scatter", color: "red"},
-                "Literacy rate": {title: "Literacy Rate", unit: "% of Population", className: "lit-rate-scatter", color: "green"}
+    var graphDict = {"Internet usage": {title: "Internet Usage", unit: "% of Population", className: "internet-usage-scatter", dotName: "internet-usage-dot", color: "pink"},
+                "Edu attainment (primary)": {title: "Educational Attainment (Primary)", unit: "% of Population", className: "edu-attain-prim-scatter", dotName: "edu-attain-prim-dot",color: "orange"},
+                "Govt exp (Exp)": {title: "Government Expenditures", unit: "% of Total Govt Expenditures", className: "govt-exp-scatter", dotName: "govt-exp-dot", color: "red"},
+                "Literacy rate": {title: "Literacy Rate", unit: "% of Population", className: "lit-rate-scatter", dotName: "lit-rate-dot", color: "green"}
     };
 
     function getYears(yr) {
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function(){
       d3.selectAll(".hover-dot").remove();
       var hoverDot = d3.select(".column.one").append("div")
                               .attr("class", "hover-dot card");
-
+      var country = d['Country name'];
       hoverDot.append("div")
         .attr("x", (graph.width / 2) + offset.left)
         .attr("y", margin.top)
@@ -74,10 +74,62 @@ document.addEventListener("DOMContentLoaded", function(){
         .attr("text-anchor", "middle")
         .attr("class", "dotTitle")
         .text(str + ": " + Math.round((d[str]) * 100) / 100 + "%");
+
+        updateGraphOnHover(d, str, country);
+
+
+    } // end showInfo
+
+    function updateGraphOnHover(d, str, country) {
+      for (var key in graphDict) {
+        if(key === str) {
+          svg.selectAll("circle." + graphDict[str]['dotName'] )
+             .data(yearData)
+             .filter( function(d) {
+               console.log("str: " + str + " d: " + d['Country name'] + " country: " + country + " result: " + (d['Country name'] === country));
+               return (d['Country name'] === country);
+             })
+             .style("fill", graphDict[str]['color'])
+             .attr("r",circleRadius+1);
+        } else {
+          svg.selectAll(".scatter-dot")
+             .data(yearData)
+             .filter( function(d) {
+               // console.log("d: " + d['Country name'] + " country: " + country + " result: " + (d['Country name'] != country));
+               return d['Country name'] != country;
+             })
+             .style("fill", "rgba(50,50,50,0.5)");
+        }
+      }
     }
 
-    function hideInfo() {
+    function updateGraphOnMouseOut(d, str, country) {
+      for (var key in graphDict) {
+        if(key === str) {
+          svg.selectAll("circle." + graphDict[str]['dotName'] )
+             .data(yearData)
+             .filter( function(d) {
+               console.log("str: " + str + " d: " + d['Country name'] + " country: " + country + " result: " + (d['Country name'] === country));
+               return (d['Country name'] === country);
+             })
+             .style("fill", graphDict[str]['color'])
+             .attr("r",circleRadius);
+        } else {
+          svg.selectAll(".scatter-dot")
+             .data(yearData)
+             .filter( function(d) {
+               // console.log("d: " + d['Country name'] + " country: " + country + " result: " + (d['Country name'] != country));
+               return d['Country name'] != country;
+             })
+             .style("fill", graphDict[key]['color']);
+        }
+      }
+    }
+
+    function hideInfo(d, str) {
+      var country = d['Country name'];
       d3.selectAll(".hover-dot").remove();
+      updateGraphOnMouseOut(d, str, country);
     }
 
     // Create scales
@@ -174,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function(){
         .text("Time: " + year);
     }
 
-    // Update points on scatterplot;
+    // Update points on scatterplot; Remove all circles & redraw graph.
     function updatePoints(year) {
       yearData = getYears(year);
       svg.selectAll("circle").remove();
@@ -198,19 +250,19 @@ document.addEventListener("DOMContentLoaded", function(){
       var dataCircles = svg.append("g").selectAll("circle").data(yearData)
         .enter().append("circle")
         .attr("r",circleRadius)
-        .attr("id", "Internet usage")
-        .attr("fill","pink")
-        .attr("fill-opacity",0.5)
+        .attr("class", d => graphDict['Internet usage']['dotName'] + " scatter-dot")
+        .style("fill","pink")
+        .style("fill-opacity",0.5)
         .attr("cx",function(d) { return xScale(d['Urbanization']); })
         .attr("cy",function(d) {
           return yScale(d["Internet usage"]); })
         .on("mouseover", function(d) {
           return showInfo(d,"Internet usage"); } )
-        .on("mouseout", hideInfo);
+        .on("mouseout", d => hideInfo(d,"Internet usage"));
       var dataCircles = svg.append("g").selectAll("circle").data(yearData)
         .enter().append("circle")
         .attr("r",circleRadius)
-        .attr("id", "Literacy rate")
+        .attr("class", d => graphDict['Literacy rate']['dotName'] + " scatter-dot")
         .attr("fill","green")
         .attr("fill-opacity",0.5)
         .attr("cx",function(d) { return xScale(d['Urbanization']); })
@@ -218,11 +270,11 @@ document.addEventListener("DOMContentLoaded", function(){
           return yScale(d["Literacy rate"]); })
         .on("mouseover", function(d) {
           return showInfo(d,"Literacy rate"); } )
-          .on("mouseout", hideInfo);
+          .on("mouseout", d => hideInfo(d,'Literacy rate'));
       var dataCircles = svg.append("g").selectAll("circle").data(yearData)
         .enter().append("circle")
         .attr("r",circleRadius)
-        .attr("id", "Edu attainment (primary)")
+        .attr("class", d => graphDict['Edu attainment (primary)']['dotName'] + " scatter-dot")
         .attr("fill","orange")
         .attr("fill-opacity",0.5)
         .attr("cx",function(d) { return xScale(d['Urbanization']); })
@@ -230,11 +282,11 @@ document.addEventListener("DOMContentLoaded", function(){
           return yScale(d["Edu attainment (primary)"]); })
         .on("mouseover", function(d) {
           return showInfo(d,"Edu attainment (primary)"); } )
-          .on("mouseout", hideInfo);
+          .on("mouseout", d => hideInfo(d, 'Edu attainment (primary)'));
       var dataCircles = svg.append("g").selectAll("circle").data(yearData)
         .enter().append("circle")
         .attr("r",circleRadius)
-        .attr("id", "Govt exp (Exp)")
+        .attr("class", d => graphDict['Govt exp (Exp)']['dotName'] + " scatter-dot")
         .attr("fill","red")
         .attr("fill-opacity",0.5)
         .attr("cx",function(d) { return xScale(d['Urbanization']); })
@@ -242,7 +294,7 @@ document.addEventListener("DOMContentLoaded", function(){
           return yScale(d["Govt exp (Exp)"]); })
         .on("mouseover", function(d) {
           return showInfo(d,"Govt exp (Exp)"); } )
-          .on("mouseout", hideInfo);
+          .on("mouseout", d => hideInfo(d,"Govt exp (Exp)"));
 
       /*
       for(var key in graphDict) {
