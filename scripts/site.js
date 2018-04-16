@@ -51,9 +51,33 @@ document.addEventListener("DOMContentLoaded", function(){
 
     yearData = getYears(year);
 
-    function showInfo(d,i) {
+    function showInfo(d,str) {
+      var hoverDot = d3.select(".hover-dot");
+      hoverDot.append("div")
+        .attr("x", (graph.width / 2) + offset.left)
+        .attr("y", margin.top)
+        .attr("text-anchor", "middle")
+        .attr("class", "dotTitle")
+        .text("Country: " + d['Country name']);
+      hoverDot.append("div")
+        .attr("x", (graph.width / 2) + offset.left)
+        .attr("y", margin.top)
+        .attr("text-anchor", "middle")
+        .attr("class", "dotTitle")
+        .text("Urbanization: " + Math.round((d['Urbanization']) * 100) / 100 + "%");
+      hoverDot.append("div")
+        .attr("x", (graph.width / 2) + offset.left)
+        .attr("y", margin.top)
+        .attr("text-anchor", "middle")
+        .attr("class", "dotTitle")
+        .text("Internet Usage: " + Math.round((d[str]) * 100) / 100 + "%");
     }
     function hideInfo(d,i) {
+      console.log("hidee")
+      var hoverDot = d3.select(".hover-dot");
+      hoverDot.select("div").remove();
+      hoverDot.select("div").remove();
+      hoverDot.select("div").remove();
     }
 
     // Create scales
@@ -172,7 +196,10 @@ document.addEventListener("DOMContentLoaded", function(){
           .attr("fill",graphDict[key]['color'])
           .attr("fill-opacity",0.5)
           .attr("cx",function(d) { return xScale(d['Urbanization']); })
-          .attr("cy",function(d) { return yScale(d[key]); });
+          .attr("cy",function(d) { return yScale(d[key]); })
+          .on("mouseover", function(d) {
+            showInfo(d,key); } )
+          .on("mouseout", hideInfo);
       }
 
     }
