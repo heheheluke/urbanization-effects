@@ -52,9 +52,9 @@ document.addEventListener("DOMContentLoaded", function(){
     yearData = getYears(year);
 
     function showInfo(d,str) {
-      d3.selectAll(".hover-dot").remove();
-      var hoverDot = d3.select(".column.one").append("div")
-                              .attr("class", "hover-dot card");
+      var hoverDot = d3.select(".hover-dot");
+      hoverDot.selectAll("*").remove()
+
       hoverDot.append("div")
         .attr("x", (graph.width / 2) + offset.left)
         .attr("y", margin.top)
@@ -73,10 +73,6 @@ document.addEventListener("DOMContentLoaded", function(){
         .attr("text-anchor", "middle")
         .attr("class", "dotTitle")
         .text(str + ": " + Math.round((d[str]) * 100) / 100 + "%");
-    }
-    function hideInfo(d,i) {
-      console.log("hidee")
-      d3.selectAll(".hover-dot").remove();
     }
 
     // Create scales
@@ -194,6 +190,52 @@ document.addEventListener("DOMContentLoaded", function(){
 
     // Plot all points (points for internet usage, CO2 emissions, etc) on scatterplot
     function plotPoints(yearData) {
+      var dataCircles = svg.append("g").selectAll("circle").data(yearData)
+        .enter().append("circle")
+        .attr("r",circleRadius)
+        .attr("id", "Internet usage")
+        .attr("fill","pink")
+        .attr("fill-opacity",0.5)
+        .attr("cx",function(d) { return xScale(d['Urbanization']); })
+        .attr("cy",function(d) {
+          return yScale(d["Internet usage"]); })
+        .on("mouseover", function(d) {
+          return showInfo(d,"Internet usage"); } )
+      var dataCircles = svg.append("g").selectAll("circle").data(yearData)
+        .enter().append("circle")
+        .attr("r",circleRadius)
+        .attr("id", "Literacy rate")
+        .attr("fill","green")
+        .attr("fill-opacity",0.5)
+        .attr("cx",function(d) { return xScale(d['Urbanization']); })
+        .attr("cy",function(d) {
+          return yScale(d["Literacy rate"]); })
+        .on("mouseover", function(d) {
+          return showInfo(d,"Literacy rate"); } )
+      var dataCircles = svg.append("g").selectAll("circle").data(yearData)
+        .enter().append("circle")
+        .attr("r",circleRadius)
+        .attr("id", "Edu attainment (primary)")
+        .attr("fill","orange")
+        .attr("fill-opacity",0.5)
+        .attr("cx",function(d) { return xScale(d['Urbanization']); })
+        .attr("cy",function(d) {
+          return yScale(d["Edu attainment (primary)"]); })
+        .on("mouseover", function(d) {
+          return showInfo(d,"Edu attainment (primary)"); } )
+      var dataCircles = svg.append("g").selectAll("circle").data(yearData)
+        .enter().append("circle")
+        .attr("r",circleRadius)
+        .attr("id", "Govt exp (Exp)")
+        .attr("fill","red")
+        .attr("fill-opacity",0.5)
+        .attr("cx",function(d) { return xScale(d['Urbanization']); })
+        .attr("cy",function(d) {
+          return yScale(d["Govt exp (Exp)"]); })
+        .on("mouseover", function(d) {
+          return showInfo(d,"Govt exp (Exp)"); } )
+
+      /*
       for(var key in graphDict) {
         var dataCircles = svg.append("g").selectAll("circle").data(yearData)
           .enter().append("circle")
@@ -203,9 +245,9 @@ document.addEventListener("DOMContentLoaded", function(){
           .attr("cx",function(d) { return xScale(d['Urbanization']); })
           .attr("cy",function(d) { return yScale(d[key]); })
           .on("mouseover", function(d) {
-            showInfo(d,key); } )
-          .on("mouseout", hideInfo);
+            showInfo(d,key); } );
       }
+      */
     }
 
     // Create key
