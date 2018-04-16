@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function(){
                 "Govt exp (Exp)": {title: "Government Expenditures", unit: "% of Total Govt Expenditures", className: "govt-exp-scatter", color: "red"},
                 "Literacy rate": {title: "Literacy Rate", unit: "% of Population", className: "lit-rate-scatter", color: "green"}
     };
+
     function getYears(yr) {
 
       var yearData = [];
@@ -149,12 +150,17 @@ document.addEventListener("DOMContentLoaded", function(){
       svg.selectAll("circle").remove();
       plotPoints(yearData);
 
-      //Redraw the individual scatters
+      // Redraw the individual scatters
       d3.selectAll(".indiv-scatter").remove();
-      createScatter("Literacy rate", year);
-      createScatter("Govt exp (Exp)", year);
-      createScatter("Edu attainment (primary)", year);
-      createScatter("Internet usage", year);
+
+      // Make individual scatterplots
+      var row1 = d3.select(".row.one");
+      createScatter("Literacy rate", year, row1);
+      createScatter("Govt exp (Exp)", year, row1);
+
+      var row2 = d3.select(".row.two");
+      createScatter("Edu attainment (primary)", year,row2);
+      createScatter("Internet usage", year, row2);
     }
 
     // Plot all points (points for internet usage, CO2 emissions, etc) on scatterplot
@@ -208,16 +214,21 @@ document.addEventListener("DOMContentLoaded", function(){
                 .text(d => (d.title + " (" + d.unit + ")"));
     }
 //-------------------------------------CREATING THE INDIVIDUAL SCATTER PLOTS----------------------------------------------
-    indivSVGwidth = 300;
-    indivSVGheight = 300;
-    heightPadding = 0.17*indivSVGheight
-    widthPadding = 0.13*indivSVGwidth
-    indivSVGrad = 3.5;
+    var indivSVGwidth = 300;
+    var indivSVGheight = 300;
+    var heightPadding = 0.17*indivSVGheight;
+    var widthPadding = 0.13*indivSVGwidth;
+    var indivSVGrad = 3.5;
 
-    var scatterScaleX = d3.scaleLinear().domain([0, 100]).range([widthPadding, indivSVGwidth-widthPadding])
-    var XAxesScale = d3.scaleLinear().domain([0, 100]).range([indivSVGwidth-widthPadding, widthPadding])
-    var tempScaleY = d3.scaleLinear().domain([0, 100]).range([heightPadding, indivSVGheight-heightPadding])
-    var yAxisScale = d3.scaleLinear().domain([0, 100]).range([indivSVGheight-heightPadding, heightPadding]) //Only used to create left-hand axis
+    var xPosTitle = 0.5*indivSVGwidth;
+    var yPosTitle = 0.07*indivSVGheight;
+    var xPosSubTitle = 0.5*indivSVGwidth;
+    var yPosSubTitle = yPosTitle + 18;
+
+    var scatterScaleX = d3.scaleLinear().domain([0, 100]).range([widthPadding, indivSVGwidth-widthPadding]);
+    var XAxesScale = d3.scaleLinear().domain([0, 100]).range([indivSVGwidth-widthPadding, widthPadding]);
+    var tempScaleY = d3.scaleLinear().domain([0, 100]).range([heightPadding, indivSVGheight-heightPadding]);
+    var yAxisScale = d3.scaleLinear().domain([0, 100]).range([indivSVGheight-heightPadding, heightPadding]); //Only used to create left-hand axis
 
     function realYScale(val) {
       if (val != '') {
@@ -230,14 +241,14 @@ document.addEventListener("DOMContentLoaded", function(){
 
     //Function that creates a scatter plot of the chosen data indicator
     //Note: creates a new SVG element for each scatter plot.
-    function createScatter(indicator, year) {
-
+    function createScatter(indicator, year, row) {
       //Make the initial SVG, all with class ".indiv-scatter" (for updating with time) and id "(indicator)-scatter"
-      var scatterSVG = d3.select(".indiv-scatter-container")/*.append("div").attr("class", "individSVGContainer")*/.append("svg")
-                          .attr("class", "indiv-scatter card")
-                          .attr("id", graphDict[indicator]['className'])
-                          .attr("width", indivSVGwidth)
-                          .attr("height", indivSVGheight);
+      scatterSVG = row.append("div").attr("class", "individSVGContainer")
+                      .append("svg")
+                      .attr("class", "indiv-scatter card")
+                      .attr("id", graphDict[indicator]['className'])
+                      .attr("width", indivSVGwidth)
+                      .attr("height", indivSVGheight);
 
       //Draw the points
       var points = scatterSVG.append("g").selectAll("circle").data(yearData);
@@ -249,28 +260,32 @@ document.addEventListener("DOMContentLoaded", function(){
                     .attr("fill-opacity", 0.75);
 
       //Create the axes and title
-      var scatterXAxis = d3.axisBottom().scale(scatterScaleX);
-      var scatterYAxis = d3.axisLeft().scale(yAxisScale);
-      scatterSVG.append("g").call(scatterXAxis).attr("transform", "translate(" + 0 +  "," + (indivSVGheight - heightPadding) + ")");
-      scatterSVG.append("g").call(scatterYAxis).attr("transform", "translate(" + (widthPadding) + ")");
+      var scatterXAxis = d3.axisBottom().scale(scatterScaleX).tickFormat(d => d + "%").ticks(5);
+      var scatterYAxis = d3.axisLeft().scale(yAxisScale).tickFormat(d => d + "%").ticks(5);
+      scatterSVG.append("g").call(scatterXAxis).attr("transform", "translate(" + 0 +  "," + (indivSVGheight - heightPadding) + ")").attr("class", "axis");
+      scatterSVG.append("g").call(scatterYAxis).attr("transform", "translate(" + (widthPadding) + ")").attr("class", "axis");
       scatterSVG.append("text")
                 .text(graphDict[indicator]['title'])
-                .attr("x", 0.5*indivSVGwidth)
-                .attr("y", 0.05*indivSVGheight)
+                .attr("x", xPosTitle)
+                .attr("y", yPosTitle)
                 .attr("class", "individSVGTitle")
                 .attr("text-anchor", "middle");
       scatterSVG.append("text")
                 .text(year)
-                .attr("x", 0.5*indivSVGwidth)
-                .attr("y", 0.05*indivSVGheight + 18)
+                .attr("x", xPosSubTitle)
+                .attr("y", yPosSubTitle)
                 .attr("text-anchor", "middle")
                 .attr("class", "individSVGSubtitle");
     }
 
-    createScatter("Literacy rate", year);
-    createScatter("Govt exp (Exp)", year);
-    createScatter("Edu attainment (primary)", year);
-    createScatter("Internet usage", year);
+    // Make individual scatterplots
+    var row1 = d3.select(".row.one");
+    createScatter("Literacy rate", year, row1);
+    createScatter("Govt exp (Exp)", year, row1);
+
+    var row2 = d3.select(".row.two");
+    createScatter("Edu attainment (primary)", year,row2);
+    createScatter("Internet usage", year, row2);
 
 
 }); // End callback data func
