@@ -32,7 +32,11 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
     var year = 2012;
-
+    var graphDict = {"Internet usage": {title: "Internet Usage", unit: "% of Population", className: "internet-usage-scatter", color: "pink"},
+                "Edu attainment (primary)": {title: "Educational Attainment (Primary)", unit: "% of Population", className: "edu-attainment-prim-scatter",color: "orange"},
+                "Govt exp (Exp)": {title: "Government Expenditures", unit: "% of Total Govt Expenditures", className: "govt-exp-scatter", color: "red"},
+                "Literacy rate": {title: "Literacy Rate", unit: "% of Population", className: "lit-rate-scatter", color: "green"}
+    };
     function getYears(yr) {
 
       var yearData = [];
@@ -155,80 +159,19 @@ document.addEventListener("DOMContentLoaded", function(){
 
     // Plot all points (points for internet usage, CO2 emissions, etc) on scatterplot
     function plotPoints(yearData) {
-      // internet usage
-      var internetCircles = svg.append("g").selectAll("circle").data(yearData);
-      internetCircles = internetCircles.enter().append("circle")
-        .attr("r",circleRadius)
-        .attr("fill","pink")
-        .attr("fill-opacity",0.5)
-        .attr("cx",function(d) { return xScale(d['Urbanization']); })
-        .attr("cy",function(d) { return yScale(d['Internet usage']); });
-      //co2 emissions
-      // var co2Circles = svg.append("g").selectAll("circle").data(yearData);
-      // co2Circles = co2Circles.enter().append("circle")
-      //   .attr("r",circleRadius)
-      //   .attr("fill","blue")
-      //   .attr("fill-opacity",0.5)
-      //   .attr("cx",function(d) { return xScale(d['Urbanization']); })
-      //   .attr("cy",function(d) { return yScale(d['CO2 emissions']); })
-      //   .on("mouseover", showInfo)
-      //   .on("mouseout", hideInfo);
-      // edu attainment (bachelor)
-      // var edubachCircles = svg.append("g").selectAll("circle").data(yearData);
-      // edubachCircles = edubachCircles.enter().append("circle")
-      //   .attr("r",circleRadius)
-      //   .attr("fill","red")
-      //   .attr("fill-opacity",0.5)
-      //   .attr("cx",function(d) { return xScale(d['Urbanization']); })
-      //   .attr("cy",function(d) { return yScale(d['Edu attainment (Bachelor)']); });
-      // edu attainment (primary)
-      var eduprimCircles = svg.append("g").selectAll("circle").data(yearData);
-      eduprimCircles = eduprimCircles.enter().append("circle")
-        .attr("r",circleRadius)
-        .attr("fill","orange")
-        .attr("fill-opacity",0.5)
-        .attr("cx",function(d) { return xScale(d['Urbanization']); })
-        .attr("cy",function(d) { return yScale(d['Edu attainment (primary)']); });
-      //fertility rate
-      // var fertrateCircles = svg.append("g").selectAll("circle").data(yearData);
-      // fertrateCircles = fertrateCircles.enter().append("circle")
-      //   .attr("r",circleRadius)
-      //   .attr("fill","grey")
-      //   .attr("fill-opacity",0.5)
-      //   .attr("cx",function(d) { return xScale(d['Urbanization']); })
-      //   .attr("cy",function(d) { return yScale(d['Fertility rate']); });
-      // gov exp (gdp)
-      // var govgdpCircles = svg.append("g").selectAll("circle").data(yearData);
-      // govgdpCircles = govgdpCircles.enter().append("circle")
-      //   .attr("r",circleRadius)
-      //   .attr("fill","turquoise")
-      //   .attr("fill-opacity",0.5)
-      //   .attr("cx",function(d) { return xScale(d['Urbanization']); })
-      //   .attr("cy",function(d) { return yScale(d['Govt exp (GDP)']); });
-      //govt exp (exp)
-      var govexpCircles = svg.append("g").selectAll("circle").data(yearData);
-      govexpCircles = govexpCircles.enter().append("circle")
-        .attr("r",circleRadius)
-        .attr("fill","red")
-        .attr("fill-opacity",0.5)
-        .attr("cx",function(d) { return xScale(d['Urbanization']); })
-        .attr("cy",function(d) { return yScale(d['Govt exp (Exp)']); });
-      //literacy rate
-      var litrateCircles = svg.append("g").selectAll("circle").data(yearData);
-      litrateCircles = litrateCircles.enter().append("circle")
-        .attr("r",circleRadius)
-        .attr("fill","green")
-        .attr("fill-opacity",0.5)
-        .attr("cx",function(d) { return xScale(d['Urbanization']); })
-        .attr("cy",function(d) { return yScale(d['Literacy rate']); });
+      for(var key in graphDict) {
+        var dataCircles = svg.append("g").selectAll("circle").data(yearData)
+          .enter().append("circle")
+          .attr("r",circleRadius)
+          .attr("fill",graphDict[key]['color'])
+          .attr("fill-opacity",0.5)
+          .attr("cx",function(d) { return xScale(d['Urbanization']); })
+          .attr("cy",function(d) { return yScale(d[key]); });
+      }
+
     }
 
     // Create key
-    var graphDict = {"Internet usage": {title: "Internet Usage", unit: "% of Population", className: "internet-usage-scatter", color: "pink"},
-                "Edu attainment (primary)": {title: "Educational Attainment (Primary)", unit: "% of Population", className: "edu-attainment-prim-scatter",color: "orange"},
-                "Govt exp (Exp)": {title: "Government Expenditures", unit: "% of Total Govt Expenditures", className: "govt-exp-scatter", color: "red"},
-                "Literacy rate": {title: "Literacy Rate", unit: "% of Population", className: "lit-rate-scatter", color: "green"}
-    };
     var keySects = Array.from( Object.values(graphDict) );
 
     createKey();
