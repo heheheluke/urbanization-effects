@@ -52,8 +52,9 @@ document.addEventListener("DOMContentLoaded", function(){
     yearData = getYears(year);
 
     function showInfo(d,str) {
-      var hoverDot = d3.select(".hover-dot");
-      hoverDot.selectAll("*").remove()
+      d3.selectAll(".hover-dot").remove();
+      var hoverDot = d3.select(".column.one").append("div")
+                              .attr("class", "hover-dot card");
 
       hoverDot.append("div")
         .attr("x", (graph.width / 2) + offset.left)
@@ -73,6 +74,10 @@ document.addEventListener("DOMContentLoaded", function(){
         .attr("text-anchor", "middle")
         .attr("class", "dotTitle")
         .text(str + ": " + Math.round((d[str]) * 100) / 100 + "%");
+    }
+
+    function hideInfo() {
+      d3.selectAll(".hover-dot").remove();
     }
 
     // Create scales
@@ -201,6 +206,7 @@ document.addEventListener("DOMContentLoaded", function(){
           return yScale(d["Internet usage"]); })
         .on("mouseover", function(d) {
           return showInfo(d,"Internet usage"); } )
+        .on("mouseout", hideInfo);
       var dataCircles = svg.append("g").selectAll("circle").data(yearData)
         .enter().append("circle")
         .attr("r",circleRadius)
@@ -212,6 +218,7 @@ document.addEventListener("DOMContentLoaded", function(){
           return yScale(d["Literacy rate"]); })
         .on("mouseover", function(d) {
           return showInfo(d,"Literacy rate"); } )
+          .on("mouseout", hideInfo);
       var dataCircles = svg.append("g").selectAll("circle").data(yearData)
         .enter().append("circle")
         .attr("r",circleRadius)
@@ -223,6 +230,7 @@ document.addEventListener("DOMContentLoaded", function(){
           return yScale(d["Edu attainment (primary)"]); })
         .on("mouseover", function(d) {
           return showInfo(d,"Edu attainment (primary)"); } )
+          .on("mouseout", hideInfo);
       var dataCircles = svg.append("g").selectAll("circle").data(yearData)
         .enter().append("circle")
         .attr("r",circleRadius)
@@ -234,6 +242,7 @@ document.addEventListener("DOMContentLoaded", function(){
           return yScale(d["Govt exp (Exp)"]); })
         .on("mouseover", function(d) {
           return showInfo(d,"Govt exp (Exp)"); } )
+          .on("mouseout", hideInfo);
 
       /*
       for(var key in graphDict) {
@@ -345,9 +354,9 @@ document.addEventListener("DOMContentLoaded", function(){
                 .attr("y", yPosSubTitle)
                 .attr("text-anchor", "middle")
                 .attr("class", "individSVGSubtitle");
-      
+
       //Dictionary for converting the raw indicator name to something that fits the labels of the axes more appropriately
-      var labelMap = {"Literacy rate": "Literacy rate", "Govt exp (Exp)": "% of expenditure", 
+      var labelMap = {"Literacy rate": "Literacy rate", "Govt exp (Exp)": "% of expenditure",
       "Edu attainment (primary)": "Completed primary", "Internet usage": "Internet usage"};
       //Create axes labels
       scatterSVG.append("text")
