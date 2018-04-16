@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function(){
       var internetCircles = svg.append("g").selectAll("circle").data(yearData);
       internetCircles = internetCircles.enter().append("circle")
         .attr("r",circleRadius)
-        .attr("fill","pink")
+        .attr("fill","brown")
         .attr("fill-opacity",0.5)
         .attr("cx",function(d) { return xScale(d['Urbanization']); })
         .attr("cy",function(d) { return yScale(d['Internet usage']); });
