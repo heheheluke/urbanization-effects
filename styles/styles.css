@@ -25,22 +25,10 @@ h1 {
   font-weight: 600;
 }
 
-.key-container {
-  padding: 15 15 15 15;
-}
-
 .card {
   background-color: #FFF;
   box-shadow: 0 2px 20px 0 rgba(0,0,0,0.05);
   border-radius: 4px;
-}
-
-.keyTitle {
-  font-weight: 600;
-}
-
-.key-container {
-  width: 20%;
 }
 
 /* ---------------------------- Positioning Main ScatterPlot ----------------------------  */
@@ -57,7 +45,32 @@ h1 {
     clear: both;
     display: table;
 }
-/* ---------------------------- Individual Graph Titles ----------------------------  */
+
+/* ---------------------------- Hover Dot Container ----------------------------  */
+.hover-dot {
+  width: 200px;
+  font-size: 16px;
+  padding: 15 15 15 15;
+}
+
+/* ---------------------------- Key ----------------------------  */
+.key-container {
+  width: 200px;
+  font-size: 16px;
+  padding: 15 15 15 15;
+}
+/*"Key:" label */
+.keyTitle {
+  font-weight: 600;
+}
+
+/*Internet usage, etc*/
+.keySect {
+  opacity: 0.5;
+  font-size: 16px;
+}
+
+/* ---------------------------- Individual Graph ----------------------------  */
 .individSVGContainer {
   display: inline-block;
 }

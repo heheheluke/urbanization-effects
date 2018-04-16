@@ -52,7 +52,9 @@ document.addEventListener("DOMContentLoaded", function(){
     yearData = getYears(year);
 
     function showInfo(d,str) {
-      var hoverDot = d3.select(".hover-dot");
+      d3.selectAll(".hover-dot").remove();
+      var hoverDot = d3.select(".column.one").append("div")
+                              .attr("class", "hover-dot card");
       hoverDot.append("div")
         .attr("x", (graph.width / 2) + offset.left)
         .attr("y", margin.top)
@@ -74,10 +76,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
     function hideInfo(d,i) {
       console.log("hidee")
-      var hoverDot = d3.select(".hover-dot");
-      hoverDot.select("div").remove();
-      hoverDot.select("div").remove();
-      hoverDot.select("div").remove();
+      d3.selectAll(".hover-dot").remove();
     }
 
     // Create scales
@@ -207,7 +206,6 @@ document.addEventListener("DOMContentLoaded", function(){
             showInfo(d,key); } )
           .on("mouseout", hideInfo);
       }
-
     }
 
     // Create key
@@ -217,8 +215,7 @@ document.addEventListener("DOMContentLoaded", function(){
     function createKey() {
       // Constants
       var xPadding = 20,
-          yPosition = 0,
-          keyFontSize = 20;
+          yPosition = 0;
 
       var keyContainer = d3.select(".key-container");
       keyContainer.append("div")
@@ -226,7 +223,6 @@ document.addEventListener("DOMContentLoaded", function(){
           .attr("y", margin.top)
           .attr("text-anchor", "middle")
           .attr("class", "keyTitle")
-          .attr("font-size", "32px")
           .text("Key:");
 
       var keyLabels = keyContainer.selectAll('text').data(keySects)
@@ -241,9 +237,7 @@ document.addEventListener("DOMContentLoaded", function(){
                 })
                 .attr("text-anchor", "start")
                 .attr("alignment-baseline", "hanging")
-                .style("font-size", keyFontSize)
                 .style("color", d => d.color)
-                .style("opacity", 0.5)
                 .text(d => (d.title + " (" + d.unit + ")"));
     }
 //-------------------------------------CREATING THE INDIVIDUAL SCATTER PLOTS----------------------------------------------
