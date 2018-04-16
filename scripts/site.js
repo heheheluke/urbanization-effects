@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", function(){
                      {title: "Govt Expenditures (% of GDP)", color: "turquoise"} ,
                      {title: "Govt Expenditures (% of Total Govt Expenditures)", color: "red"} ,
                      {title: "Literacy Rate (% of Population)", color: "green"},
-                     {title: "Internet Usage (% of Population)", color: "pink"}
+                     {title: "Internet Usage (% of Population)", color: "brown"}
                    ];
     createKey();
     function createKey() {
@@ -261,7 +261,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 //-------------------------------------CREATING THE INDIVIDUAL SCATTER PLOTS----------------------------------------------
     function indicToColor(ind) {
-      var temp = {"Internet usage": "pink",
+      var temp = {"Internet usage": "brown",
                   "Edu attainment (Bachelor)": "red",
                   "Edu attainment (primary)": "orange",
                   "Govt exp (Exp)": "red",
