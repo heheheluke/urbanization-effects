@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function(){
               .attr("preserveAspectRatio", "xMinYMin meet")
               .style("border", "1px solid #ffffff")
 
-
 // Country name,Country code,Year,Urbanization,CO2 emissions,Edu attainment (Bachelor),
 //Edu attainment (primary),Fertility rate,Govt exp (GDP),Govt exp (Exp),
 //Literacy rate,Enrollment ratio (primary),Enrollment ratio (tertiary),Internet usage
@@ -138,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function(){
           svg.selectAll("circle." + graphDict[str]['dotName'] )
              .data(yearData)
              .filter( function(d) {
-               // console.log("str: " + str + " d: " + d['Country name'] + " country: " + country + " result: " + (d['Country name'] === country));
+               console.log("str: " + str + " d: " + d['Country name'] + " country: " + country + " result: " + (d['Country name'] === country));
                return (d['Country name'] === country);
              })
              .style("fill", graphDict[str]['color'])
@@ -161,7 +160,7 @@ document.addEventListener("DOMContentLoaded", function(){
           svg.selectAll("circle." + graphDict[str]['dotName'] )
              .data(yearData)
              .filter( function(d) {
-               // console.log("str: " + str + " d: " + d['Country name'] + " country: " + country + " result: " + (d['Country name'] === country));
+               console.log("str: " + str + " d: " + d['Country name'] + " country: " + country + " result: " + (d['Country name'] === country));
                return (d['Country name'] === country);
              })
              .style("fill", graphDict[str]['color'])
@@ -408,19 +407,6 @@ document.addEventListener("DOMContentLoaded", function(){
     var keySects = Array.from( Object.values(graphDict) );
 
     createKey();
-
-    $(document).scroll(function() {
-      console.log('Scrolled to ' + $(this).scrollTop());
-      var keyContainer = $('.key-container')
-      if ($(this).scrollTop() > 378) {
-        keyContainer.addClass("pos-fixed");
-        console.log("add");
-      } else {
-        keyContainer.removeClass("pos-fixed");
-        console.log("remove");
-      }
-    })
-
     function createKey() {
       // Constants
       var xPadding = 20,
@@ -552,3 +538,4 @@ document.addEventListener("DOMContentLoaded", function(){
 }); // End callback data func
 
 }); // End DOMContentLoaded
+     
