@@ -10,11 +10,14 @@ body {
 .container {
   text-align: center;
   background-color: rgb(248,248,248);
+  letter-spacing: 0.5px;
+  padding: 40 50 50 50; /*Top Left Bottom Right*/
 }
 
 h1 {
   font-size: 2em;
-  padding: 10 0 10 0; /*Top Left Bottom Right*/
+  padding: 0 0 30 0; /*Top Left Bottom Right*/
+  margin: 0;
 }
 
 .graphTitle {
@@ -38,15 +41,6 @@ h1 {
 
 .key-container {
   width: 20%;
-}
-
-.slider-container {
-  background-color:#262626;
-  width:100%;
-  box-shadow: 0px 1px 50px #5E5E5E;
-  position:fixed;
-  bottom:0px;
-  z-index: 10;
 }
 
 /* ---------------------------- Positioning Main ScatterPlot ----------------------------  */
@@ -103,37 +97,132 @@ h1 {
 }
 
 /* ---------------------------- Slider ----------------------------  */
-.ticks {
-  font: 10px sans-serif;
+/* Code inspired from: https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/*/
+.slider-container {
+  background-color:#262626;
+  opacity: 0.5;
+  width:100%;
+  padding: 10 0 10 0; /*Top Left Bottom Right*/
+  box-shadow: 0px 1px 50px #5E5E5E;
+  position:fixed;
+  bottom:0px;
+  z-index: 10;
+  text-align: center;
 }
 
-.track,
-.track-inset,
-.track-overlay {
-  stroke-linecap: round;
+.slider-title {
+  margin-left: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 1.5px;
+  color: white;
+}
+/* Remove automatic styling for slider */
+input[type=range] {
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  width: 75%; /* Specific width is required for Firefox. */
+  background: transparent; /* Otherwise white in Chrome */
 }
 
-.track {
-  stroke: #000;
-  stroke-opacity: 0.3;
-  stroke-width: 10px;
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
 }
 
-.track-inset {
-  stroke: #ddd;
-  stroke-width: 8px;
+input[type=range]:focus {
+  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
 }
 
-.track-overlay {
-  pointer-events: stroke;
-  stroke-width: 50px;
-  stroke: transparent;
-  cursor: crosshair;
+input[type=range]::-ms-track {
+  width: 75%;
+  cursor: pointer;
+
+  /* Hides the slider so custom styles can be added */
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
 }
 
-.handle {
-  fill: #fff;
-  stroke: #000;
-  stroke-opacity: 0.5;
-  stroke-width: 1.25px;
+/* Circle button */
+/* Special styling for WebKit/Blink */
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 1px solid #778D99;
+  height: 16px;
+  width: 16px;
+  border-radius: 7px;
+  background: #E2EAEE;
+  cursor: pointer;
+  margin-top: -5px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+}
+
+/* All the same stuff for Firefox */
+input[type=range]::-moz-range-thumb {
+  border: 1px solid #778D99;
+  height: 16px;
+  width: 16px;
+  border-radius: 10px;
+  background: #E2EAEE;
+  cursor: pointer;
+}
+
+/* All the same stuff for IE */
+input[type=range]::-ms-thumb {
+  border: 1px solid #778D99;
+  height: 16px;
+  width: 16px;
+  border-radius: 10px;
+  background: #E2EAEE;
+  cursor: pointer;
+}
+
+/* Track */
+input[type=range]::-webkit-slider-runnable-track {
+  width: 75%;
+  height: 8.4px;
+  cursor: pointer;
+  background: rgb(240,240,240);
+  border-radius: 1.3px;
+  border: 0.2px solid #778D99;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: rgb(240,240,240);
+}
+
+input[type=range]::-moz-range-track {
+  width: 75%;
+  height: 8.4px;
+  cursor: pointer;
+  background: rgb(240,240,240);
+  border-radius: 1.3px;
+  border: 0.2px solid #778D99;
+}
+
+input[type=range]::-ms-track {
+  width: 75%;
+  height: 8.4px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  border-width: 16px 0;
+  color: transparent;
+}
+
+input[type=range]::-ms-fill-lower {
+  background: rgb(240,240,240);
+  border: 0.2px solid #778D99;
+  border-radius: 2.6px;
+}
+
+input[type=range]:focus::-ms-fill-lower {
+  background: rgb(240,240,240);
+}
+
+input[type=range]::-ms-fill-upper {
+  background: rgb(240,240,240);
+  border: 0.2px solid #778D99;
+  border-radius: 2.6px;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: rgb(240,240,240);
 }

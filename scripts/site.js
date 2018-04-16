@@ -142,6 +142,12 @@ document.addEventListener("DOMContentLoaded", function(){
                     .attr("text-anchor", "middle")
                     .attr("class", "individSVGSubtitle");
       }
+
+      // Update slider title
+      d3.select(".slider-title").remove();
+      d3.select(".slider-container").append("span")
+        .attr("class", "slider-title")
+        .text("Time: " + year);
     }
 
     // Update points on scatterplot;
