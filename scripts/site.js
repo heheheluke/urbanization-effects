@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function(){
         .attr("y", margin.top)
         .attr("text-anchor", "middle")
         .attr("class", "dotTitle")
-        .text("Internet Usage: " + Math.round((d[str]) * 100) / 100 + "%");
+        .text(str + ": " + Math.round((d[str]) * 100) / 100 + "%");
     }
     function hideInfo(d,i) {
       console.log("hidee")
