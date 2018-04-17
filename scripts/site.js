@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function(){
     var year = 2013;
     var graphDict = {"Internet usage": {title: "Internet Usage", unit: "% of Population", className: "internet-usage-scatter", dotName: "internet-usage-dot", color: "pink"},
                 "Edu attainment (primary)": {title: "Educational Attainment (Primary)", unit: "% of Population", className: "edu-attain-prim-scatter", dotName: "edu-attain-prim-dot",color: "orange"},
-                "Govt exp (Exp)": {title: "Government Expenditures", unit: "% of Total Govt Expenditures", className: "govt-exp-scatter", dotName: "govt-exp-dot", color: "red"},
+                "Govt exp (Exp)": {title: "Government Educational Expenditures", unit: "% of Total Govt Expenditures", className: "govt-exp-scatter", dotName: "govt-exp-dot", color: "red"},
                 "Literacy rate": {title: "Literacy Rate", unit: "% of Population", className: "lit-rate-scatter", dotName: "lit-rate-dot", color: "green"}
     };
 
@@ -124,10 +124,10 @@ document.addEventListener("DOMContentLoaded", function(){
           .attr("text-anchor", "middle")
           .attr("class", "dotTitle")
           .text(function() {if (d["Govt exp (Exp)"] != '') {
-            return "Govt Expenditure" + ": " + Math.round((d["Govt exp (Exp)"]) * 100) / 100 + "%";
+            return "Govt Edu. Expenditure" + ": " + Math.round((d["Govt exp (Exp)"]) * 100) / 100 + "%";
           }
           else {
-            return "Govt Expenditure: N/A";
+            return "Govt Edu. Expenditure: N/A";
           }
           })
           .style("font-weight", function() { if(str == "Govt exp (Exp)"){return "bold"; } else { return "normal";} })
