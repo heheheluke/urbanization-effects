@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", function(){
               .attr("preserveAspectRatio", "xMinYMin meet")
               .style("border", "1px solid #ffffff")
 
-
 // Country name,Country code,Year,Urbanization,CO2 emissions,Edu attainment (Bachelor),
 //Edu attainment (primary),Fertility rate,Govt exp (GDP),Govt exp (Exp),
 //Literacy rate,Enrollment ratio (primary),Enrollment ratio (tertiary),Internet usage
@@ -67,44 +66,108 @@ document.addEventListener("DOMContentLoaded", function(){
       var hoverDot = d3.select(".column.one").append("div")
                               .attr("class", "hover-dot card");
       var country = d['Country name'];
-      hoverDot.append("div")
+      hoverDot.append("div")      //Country name
         .attr("x", (graph.width / 2) + offset.left)
         .attr("y", margin.top)
         .attr("text-anchor", "middle")
         .attr("class", "dotTitle")
-        .text("Country: " + d['Country name']);
-      hoverDot.append("div")
+        .text("Country: " + d['Country name'])
+        .style("font-weight", 'bold');
+
+      hoverDot.append("div")      //Urbanization
         .attr("x", (graph.width / 2) + offset.left)
         .attr("y", margin.top)
         .attr("text-anchor", "middle")
         .attr("class", "dotTitle")
-        .text("Urbanization: " + Math.round((d['Urbanization']) * 100) / 100 + "%");
-      hoverDot.append("div")
+        .text("Urbanization: " + Math.round((d['Urbanization']) * 100) / 100 + "%")
+        .style("font-weight", 'bold');
+
+
+
+
+
+      hoverDot.append("div")  //Internet usage
         .attr("x", (graph.width / 2) + offset.left)
         .attr("y", margin.top)
         .attr("text-anchor", "middle")
         .attr("class", "dotTitle")
-        .text(str + ": " + Math.round((d[str]) * 100) / 100 + "%");
+        .text(function() {if (d["Internet usage"] != '') {
+          return "Internet Usage" + ": " + Math.round((d["Internet usage"]) * 100) / 100 + "%";
+        }
+        else {
+          return "Internet Usage: N/A";
+        }
+        })
+        .style("font-weight", function() { if(str == "Internet usage"){return "bold"; } else { return "normal";} })
+        .style("color", "pink")
+        .style("opacity", 0.5);
 
-        updateGraphOnHover(d, str, country);
+      hoverDot.append("div")  //Educ attainment
+        .attr("x", (graph.width / 2) + offset.left)
+        .attr("y", margin.top)
+        .attr("text-anchor", "middle")
+        .attr("class", "dotTitle")
+        .text(function() {if (d["Edu attainment (primary)"] != '') {
+          return "Educational Attainment (Primary)" + ": " + Math.round((d["Edu attainment (primary)"]) * 100) / 100 + "%";
+        }
+        else {
+          return "Educational Attainment (Primary): N/A";
+        }
+        })
+        .style("font-weight", function() { if(str == "Edu attainment (primary)"){return "bold"; } else { return "normal";} })
+        .style("color", "orange")
+        .style("opacity", 0.5);
 
-        // Update map
-        d3.select(".hover-dot").append("div").attr("class", "center").append("div").attr("id", "map-container");
-        map = getMap();
+        hoverDot.append("div")    //Govt exp
+          .attr("x", (graph.width / 2) + offset.left)
+          .attr("y", margin.top)
+          .attr("text-anchor", "middle")
+          .attr("class", "dotTitle")
+          .text(function() {if (d["Govt exp (Exp)"] != '') {
+            return "Govt Expenditure" + ": " + Math.round((d["Govt exp (Exp)"]) * 100) / 100 + "%";
+          }
+          else {
+            return "Govt Expenditure: N/A";
+          }
+          })
+          .style("font-weight", function() { if(str == "Govt exp (Exp)"){return "bold"; } else { return "normal";} })
+          .style("color", "red")
+          .style("opacity", 0.5);
 
-        var obj = {};
-        var countryCode = d["Country code"]
-        obj[countryCode] = "#49CDEB";
-        map.updateChoropleth(obj);
+        hoverDot.append("div")    //Literacy rate
+          .attr("x", (graph.width / 2) + offset.left)
+          .attr("y", margin.top)
+          .attr("text-anchor", "middle")
+          .attr("class", "dotTitle")
+          .text(function() {if (d["Literacy rate"] != '') {
+                              return "Literacy Rate" + ": " + Math.round((d["Literacy rate"]) * 100) / 100 + "%";
+                            }
+                            else {
+                              return "Literacy Rate: N/A";
+                            }
+          })
+          .style("font-weight", function() { if(str == "Literacy rate"){return "bold"; } else { return "normal";} })
+          .style("color", "green")
+          .style("opacity", 0.5);
+
+          // Update map
+          d3.select(".hover-dot").append("div").attr("class", "center").append("div").attr("id", "map-container");
+          map = getMap();
+
+          var obj = {};
+          var countryCode = d["Country code"]
+          obj[countryCode] = "#49CDEB";
+          map.updateChoropleth(obj);
     } // end showInfo
 
+    //When a data point is hovered, all related data points to that country
     function updateGraphOnHover(d, str, country) {
       for (var key in graphDict) {
         if(key === str) {
           svg.selectAll("circle." + graphDict[str]['dotName'] )
              .data(yearData)
              .filter( function(d) {
-               // console.log("str: " + str + " d: " + d['Country name'] + " country: " + country + " result: " + (d['Country name'] === country));
+               console.log("str: " + str + " d: " + d['Country name'] + " country: " + country + " result: " + (d['Country name'] === country));
                return (d['Country name'] === country);
              })
              .style("fill", graphDict[str]['color'])
@@ -127,7 +190,7 @@ document.addEventListener("DOMContentLoaded", function(){
           svg.selectAll("circle." + graphDict[str]['dotName'] )
              .data(yearData)
              .filter( function(d) {
-               // console.log("str: " + str + " d: " + d['Country name'] + " country: " + country + " result: " + (d['Country name'] === country));
+               console.log("str: " + str + " d: " + d['Country name'] + " country: " + country + " result: " + (d['Country name'] === country));
                return (d['Country name'] === country);
              })
              .style("fill", graphDict[str]['color'])
@@ -151,7 +214,6 @@ document.addEventListener("DOMContentLoaded", function(){
     function hideInfo(d, str) {
       var country = d['Country name'];
       d3.selectAll(".hover-dot").remove();
-      updateGraphOnMouseOut(d, str, country);
     }
 
     // Create scales
@@ -267,6 +329,37 @@ document.addEventListener("DOMContentLoaded", function(){
       createScatter("Internet usage", year, row2);
     }
 
+    var modifiedCircles;
+    var fadedCircles;
+    //Whenever country is hovered, all data points related to country should enlarge
+    function countryEnlarge(country) {
+      console.log("Total points: " + d3.selectAll('.scatter-dot').size());
+      var circlesToChange = d3.selectAll('.scatter-dot').filter(function(d,i) {return d['Country name'] == country; });
+      var circlesToFade = d3.selectAll('.scatter-dot').filter(function(d,i) {return d['Country name'] != country; });
+
+      modifiedCircles = circlesToChange; //Save the circles that change externally, in modifiedCircles
+      fadedCircles = circlesToFade;
+
+      //For circles related to the country, enlarge; for all others, disappear (can change functionality later)
+      circlesToChange.attr('r', circleRadius*1.5);
+      circlesToFade.style("fill", "	#D3D3D3");
+    }
+
+    //When the mouse moves off a point, return the scatterplot to normal
+    function returnToNormal() {
+      console.log("return to normal");
+      if (modifiedCircles == undefined) {
+        return null;
+      }
+      else {
+        modifiedCircles.attr('r', circleRadius);
+        d3.selectAll('.internet-usage-dot').style('fill', graphDict["Internet usage"]["color"]);
+        d3.selectAll('.lit-rate-dot').style("fill", graphDict["Literacy rate"]["color"]);
+        d3.selectAll('.edu-attain-prim-dot').style("fill", graphDict["Edu attainment (primary)"]["color"]);
+        d3.selectAll('.govt-exp-dot').style("fill", graphDict["Govt exp (Exp)"]["color"]);
+      }
+    }
+
     // Plot all points (points for internet usage, CO2 emissions, etc) on scatterplot
     function plotPoints(yearData) {
       var dataCircles = svg.append("g").selectAll("circle").data(yearData)
@@ -279,8 +372,11 @@ document.addEventListener("DOMContentLoaded", function(){
         .attr("cy",function(d) {
           return yScale(d["Internet usage"]); })
         .on("mouseover", function(d) {
-          return showInfo(d,"Internet usage"); } )
-        .on("mouseout", d => hideInfo(d,"Internet usage"));
+          showInfo(d, "Internet usage");
+          return countryEnlarge(d['Country name']); } )
+        //.on("mouseout", d => hideInfo(d,"Internet usage"));
+        .on("mouseout", function(d) { returnToNormal(); hideInfo(d,"Internet usage");  });
+
       var dataCircles = svg.append("g").selectAll("circle").data(yearData)
         .enter().append("circle")
         .attr("r",circleRadius)
@@ -291,8 +387,11 @@ document.addEventListener("DOMContentLoaded", function(){
         .attr("cy",function(d) {
           return yScale(d["Literacy rate"]); })
         .on("mouseover", function(d) {
-          return showInfo(d,"Literacy rate"); } )
-          .on("mouseout", d => hideInfo(d,'Literacy rate'));
+          showInfo(d, "Literacy rate");
+          return countryEnlarge(d['Country name']); } )
+        .on("mouseout", function(d) { returnToNormal(); hideInfo(d,'Literacy rate'); });
+        //.on("mouseout", d => hideInfo(d,'Literacy rate'));
+
       var dataCircles = svg.append("g").selectAll("circle").data(yearData)
         .enter().append("circle")
         .attr("r",circleRadius)
@@ -303,8 +402,11 @@ document.addEventListener("DOMContentLoaded", function(){
         .attr("cy",function(d) {
           return yScale(d["Edu attainment (primary)"]); })
         .on("mouseover", function(d) {
-          return showInfo(d,"Edu attainment (primary)"); } )
-          .on("mouseout", d => hideInfo(d, 'Edu attainment (primary)'));
+          showInfo(d, "Edu attainment (primary)");
+          return countryEnlarge(d['Country name']); } )
+        .on("mouseout", function(d) { returnToNormal(); hideInfo(d, 'Edu attainment (primary)'); });
+          //.on("mouseout", d => hideInfo(d, 'Edu attainment (primary)'));
+
       var dataCircles = svg.append("g").selectAll("circle").data(yearData)
         .enter().append("circle")
         .attr("r",circleRadius)
@@ -315,8 +417,10 @@ document.addEventListener("DOMContentLoaded", function(){
         .attr("cy",function(d) {
           return yScale(d["Govt exp (Exp)"]); })
         .on("mouseover", function(d) {
-          return showInfo(d,"Govt exp (Exp)"); } )
-          .on("mouseout", d => hideInfo(d,"Govt exp (Exp)"));
+          showInfo(d, "Govt exp (Exp)");
+          return countryEnlarge(d['Country name']); } )
+        .on("mouseout", function(d) { returnToNormal(); hideInfo(d,"Govt exp (Exp)"); });
+          //.on("mouseout", d => hideInfo(d,"Govt exp (Exp)"));
 
       /*
       for(var key in graphDict) {
@@ -411,7 +515,8 @@ document.addEventListener("DOMContentLoaded", function(){
                       .attr("class", "indiv-scatter card")
                       .attr("id", graphDict[indicator]['className'])
                       .attr("width", indivSVGwidth)
-                      .attr("height", indivSVGheight);
+                      .attr("height", indivSVGheight)
+                      .style("padding-left", indivSVGwidth*0.05);
 
       //Draw the points
       var points = scatterSVG.append("g").selectAll("circle").data(yearData);
@@ -441,8 +546,8 @@ document.addEventListener("DOMContentLoaded", function(){
                 .attr("class", "individSVGSubtitle");
 
       //Dictionary for converting the raw indicator name to something that fits the labels of the axes more appropriately
-      var labelMap = {"Literacy rate": "Literacy rate", "Govt exp (Exp)": "% of expenditure",
-      "Edu attainment (primary)": "Completed primary", "Internet usage": "Internet usage"};
+      var labelMap = {"Literacy rate": "Literacy rate (% of pop)", "Govt exp (Exp)": "% of expenditure",
+      "Edu attainment (primary)": "Finished primary (% of pop)", "Internet usage": "Internet usage (% of pop)"};
       //Create axes labels
       scatterSVG.append("text")
       .attr("class", "indiv-label")
@@ -450,7 +555,7 @@ document.addEventListener("DOMContentLoaded", function(){
       .attr("y", 0.5*indivSVGheight)
       .attr("x", -0.35*indivSVGwidth)
       .attr("dy", "1em")
-      .attr("transform", "rotate(-90) translate(0, " + -0.49*indivSVGwidth + ")")
+      .attr("transform", "rotate(-90) translate(" + 0.05*indivSVGwidth + "," + -0.5*indivSVGheight + ")")
       .attr("font-size", 8)
       .text(labelMap[indicator]);
 

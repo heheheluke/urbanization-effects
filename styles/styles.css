@@ -81,7 +81,7 @@ h1 {
 }
 
 .placeholder {
-  width: 200px;
+  width: 300px;
   font-size: 16px;
   padding: 15 15 15 15;
 }
@@ -161,7 +161,7 @@ h1 {
 /* Code inspired from: https://css-tricks.com/styling-cross-browser-compatible-range-inputs-css/*/
 .slider-container {
   background-color:#262626;
-  opacity: 0.5;
+  opacity: 0.75;
   width:100%;
   padding: 10 0 10 0; /*Top Left Bottom Right*/
   box-shadow: 0px 1px 50px #5E5E5E;
