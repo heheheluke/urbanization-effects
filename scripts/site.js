@@ -1,10 +1,8 @@
 document.addEventListener("DOMContentLoaded", function(){
   // Set constants
-  var width = 1000;
-  var height = 750;
+  var width = 800;
+  var height = 600;
   var margin = {top: 30, bottom: 50, left: 20, right: 20};
-
-
   var svg = d3.select(".scatterplot")
               .attr("width", width)
               .attr("height", height)
@@ -52,6 +50,18 @@ document.addEventListener("DOMContentLoaded", function(){
 
     yearData = getYears(year);
 
+    function getMap() {
+      var map = new Datamap({
+          element: document.getElementById('map-container'),
+          responsive: false,
+          fills: {
+            defaultFill: "#dbdbdb"
+          }
+      });
+      return map;
+    }
+    var map;
+
     function showInfo(d,str) {
       d3.selectAll(".hover-dot").remove();
       var hoverDot = d3.select(".column.one").append("div")
@@ -78,7 +88,14 @@ document.addEventListener("DOMContentLoaded", function(){
 
         updateGraphOnHover(d, str, country);
 
+        // Update map
+        d3.select(".hover-dot").append("div").attr("class", "center").append("div").attr("id", "map-container");
+        map = getMap();
 
+        var obj = {};
+        var countryCode = d["Country code"]
+        obj[countryCode] = "#49CDEB";
+        map.updateChoropleth(obj);
     } // end showInfo
 
     function updateGraphOnHover(d, str, country) {
@@ -125,6 +142,10 @@ document.addEventListener("DOMContentLoaded", function(){
              .style("fill", graphDict[key]['color']);
         }
       }
+      // Update map to original
+      d3.selectAll("#map-container").remove();
+      d3.select(".hover-dot").append("div").attr("id", "map-container");
+      map = getMap();
     }
 
     function hideInfo(d, str) {
@@ -143,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     function yScale(data) {
       if (data != '') {
-        var actualYScale = d3.scaleLinear().domain([0,100]).range([yMaxPix, yMinPix]);
+        var actualYScale = d3.scale.linear().domain([0,100]).range([yMaxPix, yMinPix]);
         return actualYScale(data);
       }
 
@@ -152,10 +173,10 @@ document.addEventListener("DOMContentLoaded", function(){
       }
     }
 
-    var yScaleTemp = d3.scaleLinear().domain([0,100]).range([yMaxPix, yMinPix]);
-    var yAxis = d3.axisLeft(yScaleTemp).tickFormat(d => d + "%");
-    var xScale = d3.scaleLinear().domain([0,100]).range([xMinPix, xMaxPix]);
-    var xAxis = d3.axisBottom(xScale).tickFormat(d => d + "%");
+    var yScaleTemp = d3.scale.linear().domain([0,100]).range([yMaxPix, yMinPix]);
+    var yAxis = d3.svg.axis().orient("left").scale(yScaleTemp).tickFormat(d => d + "%");
+    var xScale = d3.scale.linear().domain([0,100]).range([xMinPix, xMaxPix]);
+    var xAxis = d3.svg.axis().orient("bottom").scale(xScale).tickFormat(d => d + "%");
     var circleRadius = 5;
 
     plotPoints(yearData);
@@ -317,15 +338,13 @@ document.addEventListener("DOMContentLoaded", function(){
 
     createKey();
 
+    // Set key fixed on scroll
     $(document).scroll(function() {
-      console.log('Scrolled to ' + $(this).scrollTop());
       var keyContainer = $('.key-container')
       if ($(this).scrollTop() > 378) {
         keyContainer.addClass("pos-fixed");
-        console.log("add");
       } else {
         keyContainer.removeClass("pos-fixed");
-        console.log("remove");
       }
     })
 
@@ -369,10 +388,10 @@ document.addEventListener("DOMContentLoaded", function(){
     var xPosSubTitle = 0.5*indivSVGwidth;
     var yPosSubTitle = yPosTitle + 18;
 
-    var scatterScaleX = d3.scaleLinear().domain([0, 100]).range([widthPadding, indivSVGwidth-widthPadding]);
-    var XAxesScale = d3.scaleLinear().domain([0, 100]).range([indivSVGwidth-widthPadding, widthPadding]);
-    var tempScaleY = d3.scaleLinear().domain([0, 100]).range([heightPadding, indivSVGheight-heightPadding]);
-    var yAxisScale = d3.scaleLinear().domain([0, 100]).range([indivSVGheight-heightPadding, heightPadding]); //Only used to create left-hand axis
+    var scatterScaleX = d3.scale.linear().domain([0, 100]).range([widthPadding, indivSVGwidth-widthPadding]);
+    var XAxesScale = d3.scale.linear().domain([0, 100]).range([indivSVGwidth-widthPadding, widthPadding]);
+    var tempScaleY = d3.scale.linear().domain([0, 100]).range([heightPadding, indivSVGheight-heightPadding]);
+    var yAxisScale = d3.scale.linear().domain([0, 100]).range([indivSVGheight-heightPadding, heightPadding]); //Only used to create left-hand axis
 
     function realYScale(val) {
       if (val != '') {
@@ -404,8 +423,8 @@ document.addEventListener("DOMContentLoaded", function(){
                     .attr("fill-opacity", 0.75);
 
       //Create the axes and title
-      var scatterXAxis = d3.axisBottom().scale(scatterScaleX).tickFormat(d => d + "%").ticks(5);
-      var scatterYAxis = d3.axisLeft().scale(yAxisScale).tickFormat(d => d + "%").ticks(5);
+      var scatterXAxis = d3.svg.axis().orient("bottom").scale(scatterScaleX).tickFormat(d => d + "%").ticks(5);
+      var scatterYAxis = d3.svg.axis().orient("left").scale(yAxisScale).tickFormat(d => d + "%").ticks(5);
       scatterSVG.append("g").call(scatterXAxis).attr("transform", "translate(" + 0 +  "," + (indivSVGheight - heightPadding) + ")").attr("class", "axis");
       scatterSVG.append("g").call(scatterYAxis).attr("transform", "translate(" + (widthPadding) + ")").attr("class", "axis");
       scatterSVG.append("text")

@@ -33,7 +33,7 @@ h1 {
 
 /* ---------------------------- Positioning Main ScatterPlot ----------------------------  */
 .plots-container {
-  width: 70%;
+  width: 65%;
 }
 
 .column {
@@ -46,20 +46,36 @@ h1 {
     display: table;
 }
 
-.scatterplot {
+/* .scatterplot {
   margin-left: 30px;
+} */
+
+.plots-container {
+  margin-left: 40px;
 }
 /* ---------------------------- Hover Dot Container ----------------------------  */
 .hover-dot {
-  width: 200px;
+  width: 300px;
   font-size: 16px;
   padding: 15 15 15 15;
   margin-top: 30px;
 }
 
+/* ---------------------------- Map ----------------------------  */
+#map-container {
+  position: relative;
+  width: 290px;
+  height: 210px;
+
+}
+
+.center {
+  text-align: center;
+}
+
 /* ---------------------------- Key ----------------------------  */
 .key-container {
-  width: 200px;
+  width: 300px;
   font-size: 16px;
   padding: 15 15 15 15;
 }
