@@ -3,3 +3,7 @@ An interactive visualization of the effects of urbanization on specific developm
 Data gathered from the WorldBank repository of data on World Development Indicators, condensed for size.
 
 Requires a local web server running.
+
+Source of the data:
+WDI Data: https://datacatalog.worldbank.org/dataset/world-development-indicators
+Education Data: https://datacatalog.worldbank.org/dataset/education-statistics
