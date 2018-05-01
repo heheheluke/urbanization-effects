@@ -4,6 +4,6 @@ Data gathered from the WorldBank repository of data on World Development Indicat
 
 Requires a local web server running.
 
-Source of the data:
+Sources of the data (csv):
 WDI Data: https://datacatalog.worldbank.org/dataset/world-development-indicators
 Education Data: https://datacatalog.worldbank.org/dataset/education-statistics
